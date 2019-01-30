@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.kinfoitsolutions.ebooks.ui.data.Constants.CONNECTIVITY_ACTION
 import com.kinfoitsolutions.ebooks.ui.service.NetworkChangeReceiver
+import id.zelory.compressor.Compressor
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
 open class BaseActivity: AppCompatActivity() {

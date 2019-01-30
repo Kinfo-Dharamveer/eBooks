@@ -1,17 +1,29 @@
 package com.kinfoitsolutions.ebooks.ui.restclient;
 
 
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.widget.ImageView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.kinfoitsolutions.ebooks.R;
+import com.kinfoitsolutions.ebooks.ui.model.Getprofile.GetProfileResponse;
 import com.kinfoitsolutions.ebooks.ui.model.LoginResponse;
+import com.kinfoitsolutions.ebooks.ui.model.Logout.LogoutResponse;
+import com.kinfoitsolutions.ebooks.ui.model.RegisterResponse.RegisterResponse;
+import com.kinfoitsolutions.ebooks.ui.model.UpdateProfile.UpdateProfileResponse;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Body;
-import retrofit2.http.POST;
+import retrofit2.http.*;
 
+import java.io.*;
 import java.util.HashMap;
 
 
@@ -47,14 +59,34 @@ public class RestClient {
         return gitApiInterface;
 
 
+
     }
+
+
+
+
 
     public interface GitApiInterface {
 
         @POST("users/login")
         Call<LoginResponse> login(@Body HashMap<String, String> hashMap);
 
+        @POST("users/register")
+        Call<RegisterResponse> register(@Body HashMap<String, String> hashMap);
 
+        @POST("users/logout")
+        Call<LogoutResponse> logout(@Body HashMap<String, String> hashMap);
+
+        @GET("users/get_profile")
+        Call<GetProfileResponse> getprofile(@Query("token") String token);
+
+        @Multipart
+        @POST("users/update_profile")
+        Call<UpdateProfileResponse> updateProfile(@Part("token") RequestBody token,
+                                                  @Part("name") RequestBody name,
+                                                  @Part("email") RequestBody email,
+                                                  @Part("phone") RequestBody phone,
+                                                  @Part MultipartBody.Part image);
 
     }
 }

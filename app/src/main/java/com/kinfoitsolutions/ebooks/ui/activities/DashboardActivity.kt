@@ -26,8 +26,13 @@ import com.kinfoitsolutions.ebooks.ui.BaseActivity
 import com.kinfoitsolutions.ebooks.ui.customviews.CustomTypefaceSpan
 import com.orhanobut.hawk.Hawk
 import android.widget.ArrayAdapter
-
-
+import com.kinfoitsolutions.ebooks.ui.DialogUtils
+import com.kinfoitsolutions.ebooks.ui.model.Logout.LogoutResponse
+import com.kinfoitsolutions.ebooks.ui.restclient.RestClient
+import kotlinx.android.synthetic.main.nav_header_main.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class DashboardActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -64,9 +69,10 @@ class DashboardActivity : BaseActivity(), NavigationView.OnNavigationItemSelecte
         val host = supportFragmentManager.findFragmentById(R.id.my_fragment) as NavHostFragment? ?: return
         navController = host.navController
 
-        NavigationUI.setupActionBarWithNavController(this,navController,drawer_layout)
+        NavigationUI.setupActionBarWithNavController(this, navController, drawer_layout)
         NavigationUI.setupWithNavController(navigationView, navController)
 
+       // txtUserName.setText("")
         navigationView.setNavigationItemSelectedListener(this)
 
 
@@ -103,7 +109,7 @@ class DashboardActivity : BaseActivity(), NavigationView.OnNavigationItemSelecte
 
             R.id.nav_download -> navController.navigate(R.id.downloadFragment)
 
-           // R.id.nav_favorite -> navController.navigate(R.id.favoriteFragment)
+            // R.id.nav_favorite -> navController.navigate(R.id.favoriteFragment)
 
             R.id.nav_settings -> navController.navigate(R.id.settingsFragment)
 
@@ -125,20 +131,81 @@ class DashboardActivity : BaseActivity(), NavigationView.OnNavigationItemSelecte
             drawer_layout.closeDrawer(GravityCompat.START)
         } else {
             super.onBackPressed()
-            exit()
+            exit
         }
     }
+
+    fun logout() {
+        val myDialog = DialogUtils.showProgressDialog(this, "Progressing......")
+
+        val stringHashMap = HashMap<String, String>()
+        stringHashMap.put("token", Hawk.get(AppConstants.TOKEN))
+
+        val restClient = RestClient.getClient()
+
+        restClient.logout(stringHashMap).enqueue(object : Callback<LogoutResponse> {
+
+
+            override fun onResponse(call: Call<LogoutResponse>, response: Response<LogoutResponse>) {
+
+                if (response.isSuccessful) {
+
+                    if (response.body()!!.code.equals(100)) {
+                        Toast.makeText(applicationContext, response.body()!!.msg, Toast.LENGTH_SHORT).show()
+                        myDialog.dismiss()
+
+                        Hawk.delete(AppConstants.TOKEN)
+                        val i = Intent(applicationContext, LoginActivity::class.java)
+                        i.putExtra(AppConstants.OPEN_LOGIN_FRAG, 1)
+                        startActivity(i)
+                        finish()
+                    } else if (response.code() == 401) {
+                        // Handle unauthorized
+                        Toast.makeText(applicationContext, "Unauthorized", Toast.LENGTH_SHORT).show()
+
+                    } else if (response.code() == 500) {
+                        // Handle unauthorized
+                        Toast.makeText(applicationContext, "Server Error", Toast.LENGTH_SHORT).show()
+
+                    } else {
+                        //code 101 invalid credentials
+                        Toast.makeText(applicationContext, response.body()!!.msg, Toast.LENGTH_SHORT).show()
+                        myDialog.dismiss()
+
+                    }
+
+
+                } else {
+
+                    //response is failed
+                    Toast.makeText(applicationContext, response.body()!!.msg, Toast.LENGTH_SHORT).show()
+                    myDialog.dismiss()
+
+
+                }
+
+            }
+
+            override fun onFailure(call: Call<LogoutResponse>, t: Throwable) {
+                Toast.makeText(applicationContext, t.toString(), Toast.LENGTH_SHORT).show()
+                myDialog.dismiss()
+
+            }
+
+
+        })
+
+
+    }
+
 
     private fun createalert() {
         val builder = AlertDialog.Builder(this@DashboardActivity)
         builder.setMessage("Are you sure want to logout?")
 
         builder.setPositiveButton("YES") { dialog, which ->
-            Hawk.delete(AppConstants.TOKEN)
-            val i = Intent(applicationContext,LoginActivity::class.java)
-            i.putExtra(AppConstants.OPEN_LOGIN_FRAG,1)
-            startActivity(i)
-            finish()
+            logout()
+            dialog.dismiss()
         }
 
 
@@ -150,10 +217,11 @@ class DashboardActivity : BaseActivity(), NavigationView.OnNavigationItemSelecte
         val dialog: AlertDialog = builder.create()
 
         dialog.show()
+
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        return NavigationUI.navigateUp(Navigation.findNavController(this,R.id.my_fragment),drawer_layout)
+        return NavigationUI.navigateUp(Navigation.findNavController(this, R.id.my_fragment), drawer_layout)
 
     }
 
@@ -189,14 +257,13 @@ class DashboardActivity : BaseActivity(), NavigationView.OnNavigationItemSelecte
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
-               // mAdapter.getFilter().filter(newText)
+                // mAdapter.getFilter().filter(newText)
                 return true
             }
         })
 
         return super.onCreateOptionsMenu(menu)
     }
-
 
 
 }

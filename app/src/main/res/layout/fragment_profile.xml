@@ -3,7 +3,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
         android:background="@drawable/signupbg"
         tools:context=".ui.fragments.ProfileFragment">
 
@@ -28,7 +28,7 @@
                     android:layout_width="@dimen/_150sdp"
                     android:layout_height="@dimen/_150sdp"
                     android:layout_gravity="center"
-                    android:layout_marginTop="10dp">
+                    android:layout_margin="10dp">
 
 
                 <ImageView
@@ -44,8 +44,11 @@
                         android:id="@+id/profilePic"
                         android:layout_width="@dimen/_130sdp"
                         android:layout_height="@dimen/_130sdp"
-                        android:src="@drawable/ic_avatar"
+                        android:background="@drawable/ic_profile"
+                        app:civ_border_width="2dp"
+                        app:civ_border_color="#FFFFFF"
                         android:layout_gravity="bottom|center_horizontal"/>
+
             </FrameLayout>
 
 
@@ -108,6 +111,24 @@
                         android:textSize="@dimen/_15sdp"/>
 
             </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.kinfoitsolutions.ebooks.ui.customviews.RegularTextView
+                    android:id="@+id/btnUpdateProfile"
+                    android:layout_marginTop="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:text="Update Profile"
+                    android:layout_gravity="center"
+                    android:padding="10dp"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:gravity="center"
+                    android:textSize="@dimen/_15sdp"
+                    android:background="@drawable/rounded_layout_sky"/>
+
+
 
 
         </LinearLayout>

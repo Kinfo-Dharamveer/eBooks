@@ -44,39 +44,59 @@ class LoginActivity : BaseActivity() {
 
                     val myDialog = DialogUtils.showProgressDialog(this, "Progressing......")
 
-                    val stringHashMap  = HashMap<String, String>()
+                    val stringHashMap = HashMap<String, String>()
                     stringHashMap.put("email", email)
                     stringHashMap.put("password", password)
 
                     val restClient = RestClient.getClient()
 
-                    restClient.login(stringHashMap).enqueue(object : Callback<LoginResponse>{
-
+                    restClient.login(stringHashMap).enqueue(object : Callback<LoginResponse> {
 
                         override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
 
-                            if (response.isSuccessful){
+                            if (response.isSuccessful) {
 
-                                if (response.body()!!.code.equals(100)){
-                                    Toast.makeText(applicationContext,response.body()!!.msg, Toast.LENGTH_SHORT).show()
-                                    myDialog.dismiss()
+                                if (response.body()!!.code.equals(100)) {
+                                    Toast.makeText(applicationContext, response.body()!!.msg, Toast.LENGTH_SHORT).show()
                                     Hawk.put(AppConstants.TOKEN, response.body()!!.token)
                                     startActivity(Intent(this@LoginActivity, DashboardActivity::class.java))
                                     finish()
-                                }
-                                else{
-                                    //code 101 invalid credentials
-                                    Toast.makeText(applicationContext,response.body()!!.msg, Toast.LENGTH_SHORT).show()
                                     myDialog.dismiss()
 
                                 }
 
+                                else if (response.code() == 401) {
+                                    // Handle unauthorized
+                                    Toast.makeText(applicationContext, "Unauthorized", Toast.LENGTH_SHORT).show()
+
+                                }
+                                else if (response.code() == 500) {
+                                    // Handle unauthorized
+                                    Toast.makeText(applicationContext, "Server Error", Toast.LENGTH_SHORT).show()
+
+                                }
+
+                                else {
+                                    //code 101 invalid credentials
+                                    Toast.makeText(applicationContext, response.body()!!.msg, Toast.LENGTH_SHORT).show()
+                                    myDialog.dismiss()
+
+                                }
+                            }
+                            else if (response.code() == 401) {
+                                // Handle unauthorized
+                                Toast.makeText(applicationContext, "Unauthorized", Toast.LENGTH_SHORT).show()
 
                             }
-                            else{
+                            else if (response.code() == 501) {
+                                // Handle unauthorized
+                                Toast.makeText(applicationContext, "Server Error", Toast.LENGTH_SHORT).show()
 
+                            }
+
+                            else {
                                 //response is failed
-                                Toast.makeText(applicationContext,response.body()!!.msg, Toast.LENGTH_SHORT).show()
+                                Toast.makeText(applicationContext, response.body()!!.msg, Toast.LENGTH_SHORT).show()
                                 myDialog.dismiss()
                                 edEmail!!.text.clear()
                                 edPsw!!.text.clear()
@@ -87,22 +107,17 @@ class LoginActivity : BaseActivity() {
 
                         override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
 
-                            Toast.makeText(applicationContext,t.toString(), Toast.LENGTH_SHORT).show()
-
+                            Toast.makeText(applicationContext, t.toString(), Toast.LENGTH_SHORT).show()
                             myDialog.dismiss()
                             edEmail!!.text.clear()
                             edPsw!!.text.clear()
 
                         }
 
-
-
                     })
 
                 }
             }
-
-
         }
 
         txtSignUp.setOnClickListener {

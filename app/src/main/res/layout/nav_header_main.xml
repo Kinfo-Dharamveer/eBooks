@@ -28,7 +28,7 @@
 
 
 
-            <com.kinfoitsolutions.ebooks.ui.customviews.BoldTextView
+           <!-- <com.kinfoitsolutions.ebooks.ui.customviews.BoldTextView
                     android:id="@+id/txtUserName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
                     android:layout_marginLeft="20dp"
                     android:textColor="@color/white"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textSize="@dimen/_15sdp" />
+                    android:textSize="@dimen/_15sdp" />-->
 
         </LinearLayout>
 
