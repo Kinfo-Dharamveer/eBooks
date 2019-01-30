@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:showIn="navigation_view">
+
+    <group
+            android:id="@+id/g1"
+            android:checkableBehavior="single">
+
+        <item
+                android:id="@+id/nav_home"
+                android:icon="@drawable/ic_home"
+                android:title="@string/home"/>
+
+    </group>
+
+    <group
+            android:id="@+id/g2"
+            android:checkableBehavior="single">
+
+        <item
+                android:id="@+id/nav_latest"
+                android:icon="@drawable/ic_latest"
+                android:title="@string/latest"/>
+
+    </group>
+
+    <group
+            android:id="@+id/g3"
+            android:checkableBehavior="single">
+        <item
+                android:id="@+id/nav_category"
+                android:icon="@drawable/ic_category"
+                android:title="@string/category"/>
+
+    </group>
+
+
+    <group
+            android:id="@+id/g4"
+            android:checkableBehavior="single">
+        <item
+                android:id="@+id/nav_author"
+                android:icon="@drawable/ic_action_user"
+                android:title="@string/author"/>
+
+    </group>
+
+    <group
+            android:id="@+id/g5"
+            android:checkableBehavior="single">
+        <item
+                android:id="@+id/nav_download"
+                android:icon="@drawable/ic_download"
+                android:title="@string/download"/>
+
+    </group>
+
+   <!-- <group
+            android:id="@+id/g6"
+            android:checkableBehavior="single">
+
+
+        <item
+                android:id="@+id/nav_favorite"
+                android:icon="@drawable/ic_favorite"
+                android:title="@string/favorite"/>
+
+    </group>-->
+
+    <group
+            android:id="@+id/g7"
+            android:checkableBehavior="single">
+
+        <item
+                android:id="@+id/nav_settings"
+                android:icon="@drawable/ic_settings"
+                android:title="@string/setting"/>
+    </group>
+
+    <group
+            android:id="@+id/g8"
+            android:checkableBehavior="single">
+
+        <item
+                android:id="@+id/nav_profile"
+                android:icon="@drawable/ic_user"
+                android:title="@string/profile"/>
+    </group>
+
+    <group
+            android:id="@+id/g9"
+            android:checkableBehavior="single">
+
+        <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_logout"
+                android:title="@string/Logout"/>
+
+    </group>
+
+</menu>

@@ -1,0 +1,34 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+>
+
+    <item
+            android:id="@+id/action_search"
+            android:icon="@android:drawable/ic_menu_search"
+            android:title="@string/search"
+            app:actionViewClass="androidx.appcompat.widget.SearchView"
+            app:showAsAction="always" />
+
+
+    <item
+            android:id="@+id/action_edit"
+            android:icon="@drawable/ic_edit"
+            app:showAsAction="ifRoom"
+            android:title="@string/edit"/>
+
+    <item
+            android:id="@+id/action_filter"
+            android:icon="@drawable/ic_filterwhite"
+            app:showAsAction="ifRoom"
+            android:iconTint="@color/white"
+            android:title="@string/filter"/>
+
+    <item
+            android:id="@+id/action_category"
+            android:icon="@drawable/ic_category_dialog"
+            app:showAsAction="ifRoom"
+            android:iconTint="@color/white"
+            android:title="Category"/>
+
+
+</menu>

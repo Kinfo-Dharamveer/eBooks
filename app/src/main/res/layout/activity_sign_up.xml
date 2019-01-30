@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/signupbg"
+        tools:context=".ui.activities.LoginActivity">
+
+
+    <com.kinfoitsolutions.ebooks.ui.customviews.BoldTextView
+            android:layout_width="wrap_content"
+            android:text="@string/signup"
+            android:textSize="@dimen/_22sdp"
+            android:textColor="@color/white"
+            android:layout_margin="@dimen/_30sdp"
+            android:layout_height="wrap_content"/>
+
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+    android:layout_centerInParent="true"
+    android:layout_margin="@dimen/_20sdp">
+
+        <EditText
+                android:id="@+id/edNameSignUp"
+                android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:drawableLeft="@drawable/ic_user"
+                  android:drawableTint="@color/white"
+                  android:hint="@string/name"
+                  android:backgroundTint="@color/white"
+                  android:drawablePadding="20dp"
+                  android:inputType="text"
+                  android:textSize="@dimen/_13sdp"
+                  android:textColor="@color/white"
+                  android:textColorHint="@color/white"/>
+
+
+
+        <EditText
+                android:id="@+id/edEmailSignUp"
+                android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="10dp"
+                  android:drawableLeft="@drawable/ic_email"
+                  android:drawableTint="@color/white"
+                  android:hint="@string/email"
+                  android:backgroundTint="@color/white"
+                  android:drawablePadding="20dp"
+                  android:inputType="textEmailAddress"
+                  android:textSize="@dimen/_13sdp"
+                  android:textColor="@color/white"
+                  android:textColorHint="@color/white"/>
+
+        <EditText
+                android:id="@+id/edPswSignUp"
+                android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="10dp"
+                  android:drawableLeft="@drawable/ic_pass"
+                  android:drawableTint="@color/white"
+                  android:hint="@string/password"
+                  android:backgroundTint="@color/white"
+                  android:drawablePadding="20dp"
+                  android:inputType="textPassword"
+                  android:textSize="@dimen/_13sdp"
+                  android:textColor="@color/white"
+                  android:textColorHint="@color/white"/>
+
+        <EditText
+                android:id="@+id/edPhoneSignUp"
+                android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="10dp"
+                  android:drawableLeft="@drawable/ic_phone"
+                  android:drawableTint="@color/white"
+                  android:hint="@string/phoneno"
+                  android:backgroundTint="@color/white"
+                  android:drawablePadding="20dp"
+                  android:inputType="phone"
+                  android:textSize="@dimen/_13sdp"
+                  android:textColor="@color/white"
+                  android:textColorHint="@color/white"/>
+
+
+        <com.kinfoitsolutions.ebooks.ui.customviews.RegularTextView
+                android:id="@+id/btnRegister"
+                android:layout_marginTop="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/register"
+                android:layout_gravity="center"
+                android:padding="10dp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/colorPrimary"
+                android:gravity="center"
+                android:textSize="@dimen/_15sdp"
+                android:background="@drawable/rounded_layout_sky"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  android:gravity="center"
+                  android:layout_centerHorizontal="true"
+                  android:layout_margin="20dp"
+                  android:layout_alignParentBottom="true">
+
+
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+            <com.drivingschool.android.customviews.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:text="@string/already"
+                    android:textSize="@dimen/_15sdp" />
+
+            <com.kinfoitsolutions.ebooks.ui.customviews.RegularTextView
+                    android:id="@+id/btnLoginSignUp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:gravity="center"
+                    android:text="@string/login"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/_15sdp"/>
+        </LinearLayout>
+
+
+        <View android:layout_width="150dp"
+              android:layout_height="3dp"
+              android:layout_marginTop="10dp"
+              android:background="@color/colorPrimary"/>
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>

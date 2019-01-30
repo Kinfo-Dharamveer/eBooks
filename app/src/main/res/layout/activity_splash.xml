@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="@drawable/splash"
+        tools:context=".ui.activities.SplashActivity"
+>
+
+
+<!--
+    <LinearLayout android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  android:layout_centerInParent="true">
+
+
+        <ImageView android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:background="@drawable/splashicon"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fontPath="fonts/Montserrat-Bold.ttf"
+                android:text="@string/android_e_book"
+                android:layout_gravity="center"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_25sdp"/>
+
+    </LinearLayout>
+-->
+
+
+</RelativeLayout>
