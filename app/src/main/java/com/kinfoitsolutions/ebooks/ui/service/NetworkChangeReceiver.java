@@ -14,7 +14,6 @@ import org.greenrobot.eventbus.EventBus;
 public class NetworkChangeReceiver extends BroadcastReceiver {
     Context mContext;
 
-
     @Override
     public void onReceive(Context context, Intent intent) {
         mContext = context;

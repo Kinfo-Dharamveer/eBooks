@@ -3,6 +3,8 @@ package com.kinfoitsolutions.ebooks.ui;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;

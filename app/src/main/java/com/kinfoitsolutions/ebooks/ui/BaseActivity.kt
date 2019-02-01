@@ -2,6 +2,7 @@ package com.kinfoitsolutions.ebooks.ui
 
 import android.content.Context
 import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.kinfoitsolutions.ebooks.ui.data.Constants.CONNECTIVITY_ACTION
@@ -37,19 +38,17 @@ open class BaseActivity: AppCompatActivity() {
         registerReceiver(receiver, intentFilter)
     }
 
-    override fun onStart() {
-        super.onStart()
-        EventBus.getDefault().register(this)
-    }
 
-    override fun onStop() {
-        super.onStop()
-        EventBus.getDefault().unregister(this)
-    }
 
     override fun onPause() {
         super.onPause()
         unregisterReceiver(receiver)
+    }
+
+
+    fun isNetworkConnected(): Boolean {
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        return cm.activeNetworkInfo != null
     }
 
 

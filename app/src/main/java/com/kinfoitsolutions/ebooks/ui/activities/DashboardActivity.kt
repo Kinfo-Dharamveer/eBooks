@@ -25,6 +25,7 @@ import com.kinfoitsolutions.ebooks.ui.BaseActivity
 import com.kinfoitsolutions.ebooks.ui.customviews.CustomTypefaceSpan
 import com.orhanobut.hawk.Hawk
 import com.kinfoitsolutions.ebooks.ui.Utils
+import com.kinfoitsolutions.ebooks.ui.Utils.showSnackBar
 import com.kinfoitsolutions.ebooks.ui.data.MessageEvent
 import com.kinfoitsolutions.ebooks.ui.model.Logout.LogoutResponse
 import com.kinfoitsolutions.ebooks.ui.restclient.RestClient
@@ -135,6 +136,8 @@ class DashboardActivity : BaseActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun logout() {
+
+
         val myDialog = Utils.showProgressDialog(this, "Progressing......")
 
         val stringHashMap = HashMap<String, String>()
@@ -203,8 +206,17 @@ class DashboardActivity : BaseActivity(), NavigationView.OnNavigationItemSelecte
         builder.setMessage("Are you sure want to logout?")
 
         builder.setPositiveButton("YES") { dialog, which ->
-            logout()
-            dialog.dismiss()
+
+            if (isNetworkConnected()){
+                logout()
+                dialog.dismiss()
+            }
+            else{
+                showSnackBar(this,"Check your internet connection",main_container)
+
+            }
+
+
         }
 
 
@@ -266,21 +278,6 @@ class DashboardActivity : BaseActivity(), NavigationView.OnNavigationItemSelecte
 
 
 
-
-    @Subscribe
-    fun onEvent(status: MessageEvent) {
-
-        if (status.status.contains("NOT_CONNECT")) {
-
-            Utils.showNoInternetSnackbar("You are offline", main_container, "offline")
-
-        } else {
-
-            Utils.showNoInternetSnackbar("You are online", main_container, "online")
-
-        }
-
-    }
 
 
 

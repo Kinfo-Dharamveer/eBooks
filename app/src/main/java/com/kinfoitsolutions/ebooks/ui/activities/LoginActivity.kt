@@ -1,6 +1,8 @@
 package com.kinfoitsolutions.ebooks.ui.activities
 
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -17,8 +19,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import android.view.ViewStub
 import com.kinfoitsolutions.ebooks.ui.Utils.showNoInternetSnackbar
+import com.kinfoitsolutions.ebooks.ui.Utils.showSnackBar
 import com.kinfoitsolutions.ebooks.ui.data.MessageEvent
-import kotlinx.android.synthetic.main.no_internet_layout.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
@@ -36,98 +38,112 @@ class LoginActivity : BaseActivity() {
 
         btnLogin.setOnClickListener {
 
+            if (isNetworkConnected()){
 
-            email = edEmail.text.toString()
-            password = edPsw.text.toString()
+                email = edEmail.text.toString()
+                password = edPsw.text.toString()
 
-            when {
 
-                email == "" -> {
-                    edEmail.setError("Enter your email")
+                when {
 
-                }
-                password == "" -> {
-                    edPsw.setError("Enter your password")
+                    email == "" -> {
+                        edEmail.setError("Enter your email")
 
-                }
-                else -> {
+                    }
 
-                    val myDialog = Utils.showProgressDialog(this, "Progressing......")
+                    password == "" -> {
+                        edPsw.setError("Enter your password")
 
-                    val stringHashMap = HashMap<String, String>()
-                    stringHashMap.put("email", email)
-                    stringHashMap.put("password", password)
+                    }
 
-                    val restClient = RestClient.getClient()
 
-                    restClient.login(stringHashMap).enqueue(object : Callback<LoginResponse> {
+                    else -> {
 
-                        override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                        val myDialog = Utils.showProgressDialog(this, "Progressing......")
 
-                            if (response.isSuccessful) {
+                        val stringHashMap = HashMap<String, String>()
+                        stringHashMap.put("email", email)
+                        stringHashMap.put("password", password)
 
-                                if (response.body()!!.code.equals(100)) {
-                                    Toast.makeText(applicationContext, response.body()!!.msg, Toast.LENGTH_SHORT).show()
-                                    Hawk.put(AppConstants.TOKEN, response.body()!!.token)
-                                    startActivity(Intent(this@LoginActivity, DashboardActivity::class.java))
-                                    finish()
-                                    myDialog.dismiss()
+                        val restClient = RestClient.getClient()
 
+                        restClient.login(stringHashMap).enqueue(object : Callback<LoginResponse> {
+
+                            override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+
+                                if (response.isSuccessful) {
+
+                                    if (response.body()!!.code.equals(100)) {
+                                        Toast.makeText(applicationContext, response.body()!!.msg, Toast.LENGTH_SHORT).show()
+                                        Hawk.put(AppConstants.TOKEN, response.body()!!.token)
+                                        startActivity(Intent(this@LoginActivity, DashboardActivity::class.java))
+                                        finish()
+                                        myDialog.dismiss()
+
+                                    }
+
+                                    else if (response.code() == 401) {
+                                        // Handle unauthorized
+                                        Toast.makeText(applicationContext, "Unauthorized", Toast.LENGTH_SHORT).show()
+
+                                    }
+                                    else if (response.code() == 500) {
+                                        // Handle unauthorized
+                                        Toast.makeText(applicationContext, "Server Error", Toast.LENGTH_SHORT).show()
+
+                                    }
+
+                                    else {
+                                        //code 101 invalid credentials
+                                        Toast.makeText(applicationContext, response.body()!!.msg, Toast.LENGTH_SHORT).show()
+                                        myDialog.dismiss()
+
+                                    }
                                 }
+
 
                                 else if (response.code() == 401) {
                                     // Handle unauthorized
                                     Toast.makeText(applicationContext, "Unauthorized", Toast.LENGTH_SHORT).show()
 
                                 }
-                                else if (response.code() == 500) {
+                                else if (response.code() == 501) {
                                     // Handle unauthorized
                                     Toast.makeText(applicationContext, "Server Error", Toast.LENGTH_SHORT).show()
 
                                 }
 
                                 else {
-                                    //code 101 invalid credentials
+                                    //response is failed
                                     Toast.makeText(applicationContext, response.body()!!.msg, Toast.LENGTH_SHORT).show()
                                     myDialog.dismiss()
+                                    edEmail!!.text.clear()
+                                    edPsw!!.text.clear()
 
                                 }
-                            }
-                            else if (response.code() == 401) {
-                                // Handle unauthorized
-                                Toast.makeText(applicationContext, "Unauthorized", Toast.LENGTH_SHORT).show()
-
-                            }
-                            else if (response.code() == 501) {
-                                // Handle unauthorized
-                                Toast.makeText(applicationContext, "Server Error", Toast.LENGTH_SHORT).show()
 
                             }
 
-                            else {
-                                //response is failed
-                                Toast.makeText(applicationContext, response.body()!!.msg, Toast.LENGTH_SHORT).show()
+                            override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+
+                                Toast.makeText(applicationContext, t.toString(), Toast.LENGTH_SHORT).show()
                                 myDialog.dismiss()
                                 edEmail!!.text.clear()
                                 edPsw!!.text.clear()
 
                             }
 
-                        }
+                        })
 
-                        override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-
-                            Toast.makeText(applicationContext, t.toString(), Toast.LENGTH_SHORT).show()
-                            myDialog.dismiss()
-                            edEmail!!.text.clear()
-                            edPsw!!.text.clear()
-
-                        }
-
-                    })
-
+                    }
                 }
             }
+            else {
+                showSnackBar(this,"Check your internet connection",login_root_layout)
+            }
+
+
+
         }
 
         txtSignUp.setOnClickListener {
@@ -148,7 +164,7 @@ class LoginActivity : BaseActivity() {
 
 
 
-    @Subscribe
+   /* @Subscribe
     fun onEvent(status: MessageEvent) {
 
         if (status.status.contains("NOT_CONNECT")) {
@@ -161,7 +177,9 @@ class LoginActivity : BaseActivity() {
 
         }
 
-    }
+    }*/
+
+
 
 
 }

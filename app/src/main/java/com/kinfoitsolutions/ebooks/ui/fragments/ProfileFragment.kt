@@ -18,12 +18,16 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import com.drivingschool.android.AppConstants
+import com.kinfoitsolutions.ebooks.ui.BaseFragment
 import com.kinfoitsolutions.ebooks.ui.Utils
+import com.kinfoitsolutions.ebooks.ui.Utils.showSnackBar
 import com.kinfoitsolutions.ebooks.ui.model.Getprofile.GetProfileResponse
 import com.kinfoitsolutions.ebooks.ui.model.UpdateProfile.UpdateProfileResponse
 import com.kinfoitsolutions.ebooks.ui.restclient.RestClient
 import com.orhanobut.hawk.Hawk
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_dashboard.*
+import kotlinx.android.synthetic.main.fragment_profile.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,8 +37,7 @@ import okhttp3.MultipartBody
 import java.io.*
 
 
-class ProfileFragment : Fragment() {
-
+class ProfileFragment : BaseFragment() {
 
     private lateinit var viewOfLayout: View
     private lateinit var user_name: String
@@ -42,14 +45,10 @@ class ProfileFragment : Fragment() {
     private lateinit var phone: String
     private lateinit var imageUri: Uri
 
+    override fun provideYourFragmentView(inflater: LayoutInflater, parent: ViewGroup?, savedInstanceState: Bundle?): View {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        viewOfLayout = inflater.inflate(R.layout.fragment_profile, container, false)
+        viewOfLayout = inflater.inflate(R.layout.fragment_profile, parent, false)
         setHasOptionsMenu(true)
-
-        getuserprofile()
-
 
         viewOfLayout.edName.isEnabled = false
         viewOfLayout.edEmail.isEnabled = false
@@ -59,143 +58,159 @@ class ProfileFragment : Fragment() {
 
         viewOfLayout.iv_camera.isEnabled = false
 
+        if (isNetworkConnected(context!!)){
+            getuserprofile()
+
+        }
+        else {
+            showSnackBarFrag("Check your internet connection",activity!!.main_container)
+
+        }
+
 
         viewOfLayout.iv_camera.setOnClickListener {
             // for fragment (DO NOT use `getActivity()`)
-
-            CropImage.activity()
-                .start(context!!, this);
+            CropImage.activity().start(context!!, this);
 
         }
 
         viewOfLayout.btnUpdateProfile.setOnClickListener {
 
-            user_name = viewOfLayout.edName.text.toString().trim()
-            email = viewOfLayout.edEmail.text.toString().trim()
-            phone = viewOfLayout.edPhone.text.toString().trim()
+            if (isNetworkConnected(context!!)){
+                user_name = viewOfLayout.edName.text.toString().trim()
+                email = viewOfLayout.edEmail.text.toString().trim()
+                phone = viewOfLayout.edPhone.text.toString().trim()
+
+                when {
+
+                    user_name == "" -> {
+                        viewOfLayout.edName.setError("Enter your Name")
+
+                    }
+                    email == "" -> {
+                        viewOfLayout.edEmail.setError("Enter your email")
+
+                    }
+
+                    phone == "" -> {
+                        viewOfLayout.edPhone.setError("Enter your phone")
+
+                    }
+                    else -> {
+
+                        val myDialog = Utils.showProgressDialog(context, "Updating......")
 
 
-            when {
+                        val restClient = RestClient.getClient()
 
-                user_name == "" -> {
-                    viewOfLayout.edName.setError("Enter your Name")
+                        val token = RequestBody.create(
+                            MediaType.parse
+                                ("multipart/form-data"), Hawk.get(AppConstants.TOKEN, "")
+                        )
 
-                }
-                email == "" -> {
-                    viewOfLayout.edEmail.setError("Enter your email")
-
-                }
-
-                phone == "" -> {
-                    viewOfLayout.edPhone.setError("Enter your phone")
-
-                }
-                else -> {
-
-                    val myDialog = Utils.showProgressDialog(context, "Updating......")
-
-
-                    val restClient = RestClient.getClient()
-
-                    val token = RequestBody.create(
-                        MediaType.parse
-                            ("multipart/form-data"), Hawk.get(AppConstants.TOKEN, "")
-                    )
-
-                    val fullName = RequestBody.create(
-                        MediaType.parse
-                            ("multipart/form-data"), user_name
-                    )
-                    val email_id = RequestBody.create(
-                        MediaType.parse
-                            ("multipart/form-data"), email
-                    )
-                    val phone = RequestBody.create(
-                        MediaType.parse
-                            ("multipart/form-data"), phone
-                    )
+                        val fullName = RequestBody.create(
+                            MediaType.parse
+                                ("multipart/form-data"), user_name
+                        )
+                        val email_id = RequestBody.create(
+                            MediaType.parse
+                                ("multipart/form-data"), email
+                        )
+                        val phone = RequestBody.create(
+                            MediaType.parse
+                                ("multipart/form-data"), phone
+                        )
 
 
-                    //pass it like this
+                        //pass it like this
 
 
-                    val bitmap = MediaStore.Images.Media.getBitmap(context!!.getContentResolver(), imageUri)
+                        val bitmap = MediaStore.Images.Media.getBitmap(context!!.getContentResolver(), imageUri)
 
-                    val file = File(saveToInternalStorage(bitmap)+"/profile.jpg")
+                        val file = File(saveToInternalStorage(bitmap)+"/profile.jpg")
 
-                    val compressedImageFile = Compressor(context).compressToFile(file)
+                        val compressedImageFile = Compressor(context).compressToFile(file)
 
-                    val requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), compressedImageFile)
+                        val requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), compressedImageFile)
 
-                    // MultipartBody.Part is used to send also the actual file name
-                    val imageFile = MultipartBody.Part.createFormData("image", compressedImageFile.getName(), requestFile)
+                        // MultipartBody.Part is used to send also the actual file name
+                        val imageFile = MultipartBody.Part.createFormData("image", compressedImageFile.getName(), requestFile)
 
-                    restClient.updateProfile(token,fullName, email_id, phone, imageFile)
-                        .enqueue(object : Callback<UpdateProfileResponse> {
+                        restClient.updateProfile(token,fullName, email_id, phone, imageFile)
+                            .enqueue(object : Callback<UpdateProfileResponse> {
 
-                            override fun onResponse(call: Call<UpdateProfileResponse>, response: Response<UpdateProfileResponse>) {
+                                override fun onResponse(call: Call<UpdateProfileResponse>, response: Response<UpdateProfileResponse>) {
 
-                                if (response.isSuccessful) {
+                                    if (response.isSuccessful) {
 
-                                    if (response.body()!!.code.equals(100)) {
+                                        if (response.body()!!.code.equals(100)) {
 
-                                        viewOfLayout.edName.isEnabled = false
-                                        viewOfLayout.edEmail.isEnabled = false
-                                        viewOfLayout.edPhone.isEnabled = false
-                                        viewOfLayout.iv_camera.isEnabled = false
+                                            viewOfLayout.edName.isEnabled = false
+                                            viewOfLayout.edEmail.isEnabled = false
+                                            viewOfLayout.edPhone.isEnabled = false
+                                            viewOfLayout.iv_camera.isEnabled = false
 
-                                        viewOfLayout.btnUpdateProfile.visibility = View.GONE
+                                            viewOfLayout.btnUpdateProfile.visibility = View.GONE
 
 
+                                            Toast.makeText(context, response.body()!!.msg, Toast.LENGTH_SHORT).show()
+                                            myDialog.dismiss()
+
+                                        }
+                                        else{
+                                            Toast.makeText(context, response.body()!!.msg, Toast.LENGTH_SHORT).show()
+                                            myDialog.dismiss()
+
+                                        }
+
+                                    } else if (response.code() == 401) {
+                                        // Handle unauthorized
+                                        Toast.makeText(context, "Unauthorized", Toast.LENGTH_SHORT).show()
+                                        myDialog.dismiss()
+
+                                    } else if (response.code() == 501) {
+                                        // Handle unauthorized
+                                        Toast.makeText(context, "Server Error", Toast.LENGTH_SHORT).show()
+                                        myDialog.dismiss()
+
+                                    } else {
+                                        //response is failed
                                         Toast.makeText(context, response.body()!!.msg, Toast.LENGTH_SHORT).show()
                                         myDialog.dismiss()
 
-                                    }
-                                    else{
-                                        Toast.makeText(context, response.body()!!.msg, Toast.LENGTH_SHORT).show()
-                                        myDialog.dismiss()
 
                                     }
-
-                                } else if (response.code() == 401) {
-                                    // Handle unauthorized
-                                    Toast.makeText(context, "Unauthorized", Toast.LENGTH_SHORT).show()
-                                    myDialog.dismiss()
-
-                                } else if (response.code() == 501) {
-                                    // Handle unauthorized
-                                    Toast.makeText(context, "Server Error", Toast.LENGTH_SHORT).show()
-                                    myDialog.dismiss()
-
-                                } else {
-                                    //response is failed
-                                    Toast.makeText(context, response.body()!!.msg, Toast.LENGTH_SHORT).show()
-                                    myDialog.dismiss()
-
 
                                 }
 
-                            }
+                                override fun onFailure(call: Call<UpdateProfileResponse>, t: Throwable) {
+                                    Toast.makeText(context, t.toString(), Toast.LENGTH_SHORT).show()
+                                    myDialog.dismiss()
 
-                            override fun onFailure(call: Call<UpdateProfileResponse>, t: Throwable) {
-                                Toast.makeText(context, t.toString(), Toast.LENGTH_SHORT).show()
-                                myDialog.dismiss()
-
-                            }
+                                }
 
 
-                        })
+                            })
+
+                    }
 
                 }
+            }
+
+            else{
+                showSnackBarFrag("Check your internet connection",activity!!.main_container)
 
             }
+
+
 
         }
 
 
         return viewOfLayout
-
     }
+
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode === CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
