@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+              android:layout_height="wrap_content"
+>
 
 
     <RelativeLayout android:layout_width="match_parent"
@@ -41,15 +42,14 @@
 
 
         <EditText
-                android:id="@+id/old_psw"
+                android:id="@+id/edEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/old_password"
+                android:hint="@string/enter_your_email"
                 android:textColor="@color/black"
                 android:padding="@dimen/_5sdp"
                 android:singleLine="true"
-                android:inputType="textPassword"
-                android:textColorHint="@color/black"
+                android:inputType="textEmailAddress"
                 android:backgroundTint="@color/white"
                 android:background="@drawable/background_stroke"/>
 
@@ -62,7 +62,6 @@
                 android:textColor="@color/black"
                 android:inputType="textPassword"
                 android:padding="@dimen/_5sdp"
-                android:textColorHint="@color/black"
                 android:backgroundTint="@color/white"
                 android:singleLine="true"
                 android:background="@drawable/background_stroke"/>
@@ -78,7 +77,6 @@
                 android:textColor="@color/black"
                 android:inputType="textPassword"
                 android:padding="@dimen/_5sdp"
-                android:textColorHint="@color/black"
                 android:backgroundTint="@color/white"
                 android:background="@drawable/background_stroke"/>
 

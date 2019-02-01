@@ -3,6 +3,7 @@ package com.kinfoitsolutions.ebooks.ui.activities
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -11,10 +12,15 @@ import androidx.appcompat.app.AlertDialog
 import com.kinfoitsolutions.ebooks.R
 import com.kinfoitsolutions.ebooks.ui.BaseActivity
 import com.kinfoitsolutions.ebooks.ui.Utils
+import com.kinfoitsolutions.ebooks.ui.data.MessageEvent
 import com.kinfoitsolutions.ebooks.ui.model.ForgetResponse.ForgetResponse
 import com.kinfoitsolutions.ebooks.ui.model.VerifyOtp.VerifyOtpResponse
 import com.kinfoitsolutions.ebooks.ui.restclient.RestClient
 import kotlinx.android.synthetic.main.activity_forget_password.*
+import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.no_internet_layout.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -222,5 +228,22 @@ class ForgetPasswordActivity : BaseActivity() {
 
 
     }
+
+
+    @Subscribe
+    fun onEvent(status: MessageEvent) {
+
+        if (status.status.contains("NOT_CONNECT")) {
+
+            Utils.showNoInternetSnackbar("You are offline", forgetPswRoot, "offline")
+
+        } else {
+
+            Utils.showNoInternetSnackbar("You are online", forgetPswRoot, "online")
+
+        }
+
+    }
+
 
 }

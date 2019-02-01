@@ -16,6 +16,12 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import com.drivingschool.android.customviews.CustomTextView
 import com.kinfoitsolutions.ebooks.ui.Utils
+import com.kinfoitsolutions.ebooks.ui.model.ResetPassword.ResetPasswordResponse
+import com.kinfoitsolutions.ebooks.ui.restclient.RestClient
+import kotlinx.android.synthetic.main.activity_reset_password.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class SettingsFragment : Fragment() {
@@ -25,7 +31,7 @@ class SettingsFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        viewOfLayout =  inflater.inflate(R.layout.fragment_settings, container, false)
+        viewOfLayout = inflater.inflate(R.layout.fragment_settings, container, false)
         setHasOptionsMenu(true)
 
         viewOfLayout.shareApp.setOnClickListener {
@@ -63,21 +69,20 @@ class SettingsFragment : Fragment() {
 
         val cross_aboutus = dialogView.findViewById(R.id.cross_dialog) as ImageView
 
-        val old_psw = dialogView.findViewById(R.id.old_psw) as EditText
+        val edEmail = dialogView.findViewById(R.id.edEmail) as EditText
         val new_psw = dialogView.findViewById(R.id.new_psw) as EditText
         val confirm_psw = dialogView.findViewById(R.id.confirm_psw) as EditText
         val submitPsw = dialogView.findViewById(R.id.submitPsw) as Button
 
         submitPsw.setOnClickListener {
 
-            val oldPass = old_psw.text.toString()
+            val email = edEmail.text.toString()
             val newPass = new_psw.text.toString()
             val confirmPass = confirm_psw.text.toString()
 
-            when
-            {
-                oldPass == "" -> {
-                    old_psw.setError("Enter your old password")
+            when {
+                email == "" -> {
+                    edEmail.setError("Enter your email")
 
                 }
                 newPass == "" -> {
@@ -85,17 +90,73 @@ class SettingsFragment : Fragment() {
 
                 }
                 confirmPass == "" -> {
-                    confirm_psw.setError("Enter your password")
+                    confirm_psw.setError("Enter your confirm password")
                 }
-                newPass.equals(confirmPass) ->{
-                    Toast.makeText(context,"Password doesn't match",Toast.LENGTH_SHORT).show()
+                !newPass.equals(confirmPass) -> {
+                    Utils.showSnackBar(context, "Password doesn't match", resetPswLayout)
                 }
 
                 else -> {
 
-                    val myDialog = Utils.showProgressDialog(context, "Progressing......")
+                    resetPasswordApi(email, newPass)
 
-                    alertDialog.dismiss()
+                }
+
+            }
+        }
+
+        alertDialog = dialogBuilder.create()
+        alertDialog.show()
+
+        cross_aboutus.setOnClickListener {
+            alertDialog.dismiss()
+        }
+
+    }
+
+    private fun resetPasswordApi(email: String, password: String) {
+
+        val myDialog = Utils.showProgressDialog(context, "Please wait......")
+
+        val stringHashMap = HashMap<String, String>()
+        stringHashMap.put("email", email)
+        stringHashMap.put("password", password)
+
+        val restClient = RestClient.getClient()
+
+        restClient.reset_password(stringHashMap).enqueue(object : Callback<ResetPasswordResponse> {
+
+            override fun onResponse(call: Call<ResetPasswordResponse>, response: Response<ResetPasswordResponse>) {
+
+                if (response.isSuccessful) {
+
+                    if (response.body()!!.code.equals(100)) {
+                        Utils.showSnackBar(context, response.body()!!.msg, resetPswLayout)
+                        myDialog.dismiss()
+
+                    } else {
+                        Utils.showSnackBar(context, response.body()!!.msg, resetPswLayout)
+                        myDialog.dismiss()
+
+                    }
+
+
+                } else if (response.code() == 401) {
+                    // Handle unauthorized
+                    Utils.showSnackBar(context, "Unauthorized", resetPswLayout)
+                    myDialog.dismiss()
+
+
+                } else if (response.code() == 500) {
+                    // Handle unauthorized
+                    Utils.showSnackBar(context, "Server Error", resetPswLayout)
+                    myDialog.dismiss()
+
+                } else {
+                    //response is failed
+                    Utils.showSnackBar(context, response.body()!!.msg, resetPswLayout)
+
+                    myDialog.dismiss()
 
 
                 }
@@ -103,15 +164,17 @@ class SettingsFragment : Fragment() {
 
             }
 
-        }
+            override fun onFailure(call: Call<ResetPasswordResponse>, t: Throwable) {
+
+                Utils.showSnackBar(context, t.toString(), resetPswLayout)
+                myDialog.dismiss()
 
 
-         alertDialog = dialogBuilder.create()
-        alertDialog.show()
+            }
 
-        cross_aboutus.setOnClickListener {
-            alertDialog.dismiss()
-        }
+
+        })
+
 
     }
 
@@ -125,7 +188,6 @@ class SettingsFragment : Fragment() {
     }
 
     private fun privacyDialog() {
-
 
 
     }
@@ -142,10 +204,12 @@ class SettingsFragment : Fragment() {
         val cross_aboutus = dialogView.findViewById(R.id.cross_aboutus) as ImageView
         val about_ustext = dialogView.findViewById(R.id.about_ustext) as CustomTextView
 
-        about_ustext.setText("eBooks.com's Ebook Reader lets you read your favorite books on the go." +
-                " Choose from a massive collection of popular books that you can download in a jiffy.")
+        about_ustext.setText(
+            "eBooks.com's Ebook Reader lets you read your favorite books on the go." +
+                    " Choose from a massive collection of popular books that you can download in a jiffy."
+        )
 
-         alertDialog = dialogBuilder.create()
+        alertDialog = dialogBuilder.create()
         alertDialog.show()
 
         cross_aboutus.setOnClickListener {
@@ -181,13 +245,15 @@ class SettingsFragment : Fragment() {
                     Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
                     Intent.FLAG_ACTIVITY_MULTIPLE_TASK
         )
-        try
-        {
+        try {
             startActivity(goToMarket)
-        }
-        catch (e:ActivityNotFoundException) {
-            startActivity(Intent(Intent.ACTION_VIEW,
-                Uri.parse("http://play.google.com/store/apps/details?id=" + context!!.getPackageName())))
+        } catch (e: ActivityNotFoundException) {
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("http://play.google.com/store/apps/details?id=" + context!!.getPackageName())
+                )
+            )
         }
 
 

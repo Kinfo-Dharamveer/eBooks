@@ -2,15 +2,21 @@ package com.kinfoitsolutions.ebooks.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import com.drivingschool.android.AppConstants
 import com.kinfoitsolutions.ebooks.R
 import com.kinfoitsolutions.ebooks.ui.BaseActivity
 import com.kinfoitsolutions.ebooks.ui.Utils
+import com.kinfoitsolutions.ebooks.ui.data.MessageEvent
 import com.kinfoitsolutions.ebooks.ui.model.RegisterResponse.RegisterResponse
 import com.kinfoitsolutions.ebooks.ui.restclient.RestClient
 import com.orhanobut.hawk.Hawk
+import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_sign_up.*
+import kotlinx.android.synthetic.main.no_internet_layout.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -22,7 +28,6 @@ class SignUpActivity : BaseActivity() {
     private lateinit var email: String
     private lateinit var password: String
     private lateinit var phoneNo: String
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -142,4 +147,22 @@ class SignUpActivity : BaseActivity() {
         }
 
     }
+
+    @Subscribe
+    fun onEvent(status: MessageEvent) {
+
+        if (status.status.contains("NOT_CONNECT")) {
+
+            Utils.showNoInternetSnackbar("You are offline", signUpLayout, "offline")
+
+        } else {
+
+            Utils.showNoInternetSnackbar("You are online", signUpLayout, "online")
+
+        }
+    }
+
+
+
+
 }

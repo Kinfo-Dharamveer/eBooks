@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.kinfoitsolutions.ebooks.ui.data.Constants.CONNECTIVITY_ACTION
 import com.kinfoitsolutions.ebooks.ui.service.NetworkChangeReceiver
 import id.zelory.compressor.Compressor
+import org.greenrobot.eventbus.EventBus
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
 open class BaseActivity: AppCompatActivity() {
@@ -34,6 +35,16 @@ open class BaseActivity: AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         registerReceiver(receiver, intentFilter)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
     }
 
     override fun onPause() {

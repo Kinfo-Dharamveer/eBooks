@@ -271,6 +271,7 @@ class ProfileFragment : Fragment() {
     }
 
     fun getuserprofile() {
+
         val myDialog = Utils.showProgressDialog(activity, "Progressing......")
 
 

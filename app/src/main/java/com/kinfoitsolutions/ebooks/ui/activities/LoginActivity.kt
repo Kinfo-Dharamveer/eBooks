@@ -2,6 +2,7 @@ package com.kinfoitsolutions.ebooks.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import com.drivingschool.android.AppConstants
 import com.kinfoitsolutions.ebooks.R
@@ -14,6 +15,13 @@ import kotlinx.android.synthetic.main.activity_login.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import android.view.ViewStub
+import com.kinfoitsolutions.ebooks.ui.Utils.showNoInternetSnackbar
+import com.kinfoitsolutions.ebooks.ui.data.MessageEvent
+import kotlinx.android.synthetic.main.no_internet_layout.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+
 
 class LoginActivity : BaseActivity() {
 
@@ -23,6 +31,8 @@ class LoginActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+
 
         btnLogin.setOnClickListener {
 
@@ -135,4 +145,23 @@ class LoginActivity : BaseActivity() {
         }
 
     }
+
+
+
+    @Subscribe
+    fun onEvent(status: MessageEvent) {
+
+        if (status.status.contains("NOT_CONNECT")) {
+
+            showNoInternetSnackbar("You are offline",login_root_layout,"offline")
+
+        } else {
+
+            showNoInternetSnackbar("You are online",login_root_layout,"online")
+
+        }
+
+    }
+
+
 }

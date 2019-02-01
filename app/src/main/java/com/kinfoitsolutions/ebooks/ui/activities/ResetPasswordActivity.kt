@@ -1,17 +1,21 @@
 package com.kinfoitsolutions.ebooks.ui.activities
 
 import android.os.Bundle
-import android.widget.RelativeLayout
+import android.view.View
 import com.kinfoitsolutions.ebooks.R
 import com.kinfoitsolutions.ebooks.ui.BaseActivity
 import com.kinfoitsolutions.ebooks.ui.Utils
+import com.kinfoitsolutions.ebooks.ui.Utils.showNoInternetSnackbar
 import com.kinfoitsolutions.ebooks.ui.model.ResetPassword.ResetPasswordResponse
 import com.kinfoitsolutions.ebooks.ui.restclient.RestClient
-import kotlinx.android.synthetic.main.activity_reset_password.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import com.google.android.material.snackbar.Snackbar
+import com.kinfoitsolutions.ebooks.ui.data.MessageEvent
+import kotlinx.android.synthetic.main.activity_reset_password.*
+import kotlinx.android.synthetic.main.no_internet_layout.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 
 
 class ResetPasswordActivity : BaseActivity() {
@@ -20,14 +24,12 @@ class ResetPasswordActivity : BaseActivity() {
     private lateinit var emailId: String
     private lateinit var newPassword: String
     private lateinit var confirmPassword: String
-    private lateinit var resetPswLayout: RelativeLayout
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reset_password)
 
-        resetPswLayout = findViewById(R.id.resetPswLayout)
 
         btnSubmit.setOnClickListener {
 
@@ -113,9 +115,27 @@ class ResetPasswordActivity : BaseActivity() {
 
 
                     })
+
                 }
             }
 
+
+        }
+
+    }
+
+
+
+    @Subscribe
+    fun onEvent(status: MessageEvent) {
+
+        if (status.status.contains("NOT_CONNECT")) {
+
+            showNoInternetSnackbar("You are offline",resetPswLayout,"offline")
+
+        } else {
+
+            showNoInternetSnackbar("You are online",resetPswLayout,"online")
 
         }
 
