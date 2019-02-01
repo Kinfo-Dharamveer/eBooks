@@ -2,8 +2,8 @@
 <FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent" android:layout_height="match_parent"
         android:background="@drawable/signupbg"
         tools:context=".ui.fragments.ProfileFragment">
 
@@ -24,32 +24,41 @@
                       android:gravity="center">
 
 
-            <FrameLayout
+            <RelativeLayout
                     android:layout_width="@dimen/_150sdp"
                     android:layout_height="@dimen/_150sdp"
                     android:layout_gravity="center"
                     android:layout_margin="10dp">
 
-
-                <ImageView
-                        android:id="@+id/iv_camera"
-                        android:layout_width="@dimen/_40sdp"
-                        android:layout_height="@dimen/_40sdp"
-                        android:src="@drawable/ic_camera"
-                        android:layout_gravity="bottom|right"/>
-
-
-
                 <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/profilePic"
                         android:layout_width="@dimen/_130sdp"
                         android:layout_height="@dimen/_130sdp"
-                        android:background="@drawable/ic_profile"
+                        android:background="@drawable/ic_avatar"
                         app:civ_border_width="2dp"
                         app:civ_border_color="#FFFFFF"
+                        android:layout_centerInParent="true"
                         android:layout_gravity="bottom|center_horizontal"/>
 
-            </FrameLayout>
+
+                <RelativeLayout android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                    <ImageView
+                            android:id="@+id/iv_camera"
+                            android:layout_width="@dimen/_40sdp"
+                            android:layout_height="@dimen/_40sdp"
+                            android:src="@drawable/ic_camera"
+                            android:background="@drawable/circle"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentRight="true"
+
+                    />
+
+                </RelativeLayout>
+
+
+            </RelativeLayout>
 
 
             <com.google.android.material.textfield.TextInputLayout
@@ -118,7 +127,6 @@
                     android:layout_marginTop="20dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
                     android:text="Update Profile"
                     android:layout_gravity="center"
                     android:padding="10dp"
@@ -127,8 +135,6 @@
                     android:gravity="center"
                     android:textSize="@dimen/_15sdp"
                     android:background="@drawable/rounded_layout_sky"/>
-
-
 
 
         </LinearLayout>

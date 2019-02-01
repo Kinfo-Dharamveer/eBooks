@@ -44,7 +44,6 @@
     <string name="moreapp">More App</string>
     <string name="shareapp">Share App</string>
     <string name="rateapp">Rate App</string>
-    <string name="submit">Submit</string>
     <string name="enter_your_email">Enter your Email</string>
     <string name="forget_password">Forget Password</string>
     <string name="edit">Edit</string>
@@ -53,4 +52,7 @@
     <string name="change_password">Change Password</string>
     <string name="old_password">Old Password</string>
     <string name="new_passoword">New Passoword</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="submit">Submit</string>
+    <string name="confirm_password">Confirm Password</string>
 </resources>

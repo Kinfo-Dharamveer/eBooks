@@ -6,7 +6,7 @@ import android.widget.Toast
 import com.drivingschool.android.AppConstants
 import com.kinfoitsolutions.ebooks.R
 import com.kinfoitsolutions.ebooks.ui.BaseActivity
-import com.kinfoitsolutions.ebooks.ui.DialogUtils
+import com.kinfoitsolutions.ebooks.ui.Utils
 import com.kinfoitsolutions.ebooks.ui.model.LoginResponse
 import com.kinfoitsolutions.ebooks.ui.restclient.RestClient
 import com.orhanobut.hawk.Hawk
@@ -42,7 +42,7 @@ class LoginActivity : BaseActivity() {
                 }
                 else -> {
 
-                    val myDialog = DialogUtils.showProgressDialog(this, "Progressing......")
+                    val myDialog = Utils.showProgressDialog(this, "Progressing......")
 
                     val stringHashMap = HashMap<String, String>()
                     stringHashMap.put("email", email)

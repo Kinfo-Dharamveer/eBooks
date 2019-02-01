@@ -9,25 +9,21 @@ import android.widget.Toast
 import com.kinfoitsolutions.ebooks.R
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.fragment_profile.view.*
-import android.R.attr.data
 import id.zelory.compressor.Compressor
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.ContextWrapper
 import android.provider.MediaStore
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
 import com.drivingschool.android.AppConstants
-import com.kinfoitsolutions.ebooks.ui.DialogUtils
+import com.kinfoitsolutions.ebooks.ui.Utils
 import com.kinfoitsolutions.ebooks.ui.model.Getprofile.GetProfileResponse
 import com.kinfoitsolutions.ebooks.ui.model.UpdateProfile.UpdateProfileResponse
 import com.kinfoitsolutions.ebooks.ui.restclient.RestClient
 import com.orhanobut.hawk.Hawk
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.activity_sign_up.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -59,8 +55,14 @@ class ProfileFragment : Fragment() {
         viewOfLayout.edEmail.isEnabled = false
         viewOfLayout.edPhone.isEnabled = false
 
+        viewOfLayout.btnUpdateProfile.visibility = View.GONE
+
+        viewOfLayout.iv_camera.isEnabled = false
+
+
         viewOfLayout.iv_camera.setOnClickListener {
             // for fragment (DO NOT use `getActivity()`)
+
             CropImage.activity()
                 .start(context!!, this);
 
@@ -90,7 +92,7 @@ class ProfileFragment : Fragment() {
                 }
                 else -> {
 
-                    val myDialog = DialogUtils.showProgressDialog(context, "Updating......")
+                    val myDialog = Utils.showProgressDialog(context, "Updating......")
 
 
                     val restClient = RestClient.getClient()
@@ -140,6 +142,7 @@ class ProfileFragment : Fragment() {
                                         viewOfLayout.edName.isEnabled = false
                                         viewOfLayout.edEmail.isEnabled = false
                                         viewOfLayout.edPhone.isEnabled = false
+                                        viewOfLayout.iv_camera.isEnabled = false
 
                                         viewOfLayout.btnUpdateProfile.visibility = View.GONE
 
@@ -255,6 +258,7 @@ class ProfileFragment : Fragment() {
 
                 viewOfLayout.edName.isEnabled = true
                 viewOfLayout.edPhone.isEnabled = true
+                viewOfLayout.iv_camera.isEnabled = true
 
                 viewOfLayout.btnUpdateProfile.visibility = View.VISIBLE
 
@@ -267,7 +271,7 @@ class ProfileFragment : Fragment() {
     }
 
     fun getuserprofile() {
-        val myDialog = DialogUtils.showProgressDialog(activity, "Progressing......")
+        val myDialog = Utils.showProgressDialog(activity, "Progressing......")
 
 
         val restClient = RestClient.getClient()
@@ -292,12 +296,20 @@ class ProfileFragment : Fragment() {
                         }
                         if (response.body()!!.user.userProfile.profileImage != null) {
 
-                            Log.e("profilepic", "" + response.body()!!.user.userProfile.profileImage)
 
-                            Picasso.get().load(response.body()!!.user.userProfile.profileImage).fit()
-                                .placeholder(R.drawable.ic_avatar)
-                                .error(R.drawable.ic_avatar)
-                                .into(viewOfLayout.profilePic)
+                            var imageUrl: String? = ""
+                            try {
+                                imageUrl = response.body()!!.user.userProfile.profileImage
+                                Log.e("profilepic", "" + response.body()!!.user.userProfile.profileImage)
+
+                                Picasso.get().load(imageUrl).fit()
+                                    .placeholder(R.drawable.ic_avatar)
+                                    .error(R.drawable.ic_avatar)
+                                    .into(viewOfLayout.profilePic)
+
+                            } catch (e: Exception) {
+                            }
+
 
                         }
                     } else if (response.code() == 401) {

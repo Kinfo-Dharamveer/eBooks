@@ -1,17 +1,15 @@
 package com.kinfoitsolutions.ebooks.ui.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.drivingschool.android.AppConstants
 import com.kinfoitsolutions.ebooks.R
 import com.kinfoitsolutions.ebooks.ui.BaseActivity
-import com.kinfoitsolutions.ebooks.ui.DialogUtils
+import com.kinfoitsolutions.ebooks.ui.Utils
 import com.kinfoitsolutions.ebooks.ui.model.RegisterResponse.RegisterResponse
 import com.kinfoitsolutions.ebooks.ui.restclient.RestClient
 import com.orhanobut.hawk.Hawk
-import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_sign_up.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -59,7 +57,7 @@ class SignUpActivity : BaseActivity() {
 
                 else -> {
 
-                    val myDialog = DialogUtils.showProgressDialog(this, "Progressing......")
+                    val myDialog = Utils.showProgressDialog(this, "Progressing......")
 
                     val stringHashMap  = HashMap<String, String>()
                     stringHashMap.put("email", email)

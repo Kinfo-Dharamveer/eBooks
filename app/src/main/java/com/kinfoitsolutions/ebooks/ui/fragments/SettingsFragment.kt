@@ -15,8 +15,7 @@ import android.view.Menu
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import com.drivingschool.android.customviews.CustomTextView
-import com.kinfoitsolutions.ebooks.ui.DialogUtils
-import kotlinx.android.synthetic.main.activity_login.*
+import com.kinfoitsolutions.ebooks.ui.Utils
 
 
 class SettingsFragment : Fragment() {
@@ -94,7 +93,7 @@ class SettingsFragment : Fragment() {
 
                 else -> {
 
-                    val myDialog = DialogUtils.showProgressDialog(context, "Progressing......")
+                    val myDialog = Utils.showProgressDialog(context, "Progressing......")
 
                     alertDialog.dismiss()
 

@@ -8,7 +8,6 @@ import android.os.Handler
 import android.text.Spannable
 import android.text.SpannableString
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
@@ -20,16 +19,13 @@ import androidx.navigation.ui.NavigationUI
 import com.drivingschool.android.AppConstants
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_dashboard.*
-import kotlinx.android.synthetic.main.toolbar_main.*
 import com.kinfoitsolutions.ebooks.R
 import com.kinfoitsolutions.ebooks.ui.BaseActivity
 import com.kinfoitsolutions.ebooks.ui.customviews.CustomTypefaceSpan
 import com.orhanobut.hawk.Hawk
-import android.widget.ArrayAdapter
-import com.kinfoitsolutions.ebooks.ui.DialogUtils
+import com.kinfoitsolutions.ebooks.ui.Utils
 import com.kinfoitsolutions.ebooks.ui.model.Logout.LogoutResponse
 import com.kinfoitsolutions.ebooks.ui.restclient.RestClient
-import kotlinx.android.synthetic.main.nav_header_main.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -136,7 +132,7 @@ class DashboardActivity : BaseActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun logout() {
-        val myDialog = DialogUtils.showProgressDialog(this, "Progressing......")
+        val myDialog = Utils.showProgressDialog(this, "Progressing......")
 
         val stringHashMap = HashMap<String, String>()
         stringHashMap.put("token", Hawk.get(AppConstants.TOKEN))

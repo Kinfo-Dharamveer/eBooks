@@ -9,11 +9,14 @@ import android.widget.ImageView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kinfoitsolutions.ebooks.R;
+import com.kinfoitsolutions.ebooks.ui.model.ForgetResponse.ForgetResponse;
 import com.kinfoitsolutions.ebooks.ui.model.Getprofile.GetProfileResponse;
 import com.kinfoitsolutions.ebooks.ui.model.LoginResponse;
 import com.kinfoitsolutions.ebooks.ui.model.Logout.LogoutResponse;
 import com.kinfoitsolutions.ebooks.ui.model.RegisterResponse.RegisterResponse;
+import com.kinfoitsolutions.ebooks.ui.model.ResetPassword.ResetPasswordResponse;
 import com.kinfoitsolutions.ebooks.ui.model.UpdateProfile.UpdateProfileResponse;
+import com.kinfoitsolutions.ebooks.ui.model.VerifyOtp.VerifyOtpResponse;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
@@ -87,6 +90,17 @@ public class RestClient {
                                                   @Part("email") RequestBody email,
                                                   @Part("phone") RequestBody phone,
                                                   @Part MultipartBody.Part image);
+
+        @POST("users/reset_password_request")
+        Call<ForgetResponse> forget_password(@Body HashMap<String, String> hashMap);
+
+
+        @POST("users/verify_otp")
+        Call<VerifyOtpResponse> verifyOTp(@Body HashMap<String, String> hashMap);
+
+
+        @POST("users/reset_password")
+        Call<ResetPasswordResponse> reset_password(@Body HashMap<String, String> hashMap);
 
     }
 }
