@@ -48,6 +48,7 @@ class ProfileFragment : BaseFragment() {
     override fun provideYourFragmentView(inflater: LayoutInflater, parent: ViewGroup?, savedInstanceState: Bundle?): View {
 
         viewOfLayout = inflater.inflate(R.layout.fragment_profile, parent, false)
+
         setHasOptionsMenu(true)
 
         viewOfLayout.edName.isEnabled = false
@@ -60,11 +61,10 @@ class ProfileFragment : BaseFragment() {
 
         if (isNetworkConnected(context!!)){
             getuserprofile()
-
         }
         else {
-            showSnackBarFrag("Check your internet connection",activity!!.main_container)
 
+            showSnackBarFrag("Check your internet connection",activity!!.main_container)
         }
 
 
@@ -124,73 +124,81 @@ class ProfileFragment : BaseFragment() {
 
                         //pass it like this
 
+                        try {
+                            val bitmap = MediaStore.Images.Media.getBitmap(context!!.getContentResolver(), imageUri)
 
-                        val bitmap = MediaStore.Images.Media.getBitmap(context!!.getContentResolver(), imageUri)
+                            val file = File(saveToInternalStorage(bitmap)+"/profile.jpg")
 
-                        val file = File(saveToInternalStorage(bitmap)+"/profile.jpg")
+                            val compressedImageFile = Compressor(context).compressToFile(file)
 
-                        val compressedImageFile = Compressor(context).compressToFile(file)
+                            val requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), compressedImageFile)
 
-                        val requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), compressedImageFile)
+                            // MultipartBody.Part is used to send also the actual file name
+                            val imageFile = MultipartBody.Part.createFormData("image", compressedImageFile.getName(), requestFile)
 
-                        // MultipartBody.Part is used to send also the actual file name
-                        val imageFile = MultipartBody.Part.createFormData("image", compressedImageFile.getName(), requestFile)
+                            restClient.updateProfile(token,fullName, email_id, phone, imageFile)
+                                .enqueue(object : Callback<UpdateProfileResponse> {
 
-                        restClient.updateProfile(token,fullName, email_id, phone, imageFile)
-                            .enqueue(object : Callback<UpdateProfileResponse> {
+                                    override fun onResponse(call: Call<UpdateProfileResponse>, response: Response<UpdateProfileResponse>) {
 
-                                override fun onResponse(call: Call<UpdateProfileResponse>, response: Response<UpdateProfileResponse>) {
+                                        if (response.isSuccessful) {
 
-                                    if (response.isSuccessful) {
+                                            if (response.body()!!.code.equals(100)) {
 
-                                        if (response.body()!!.code.equals(100)) {
+                                                viewOfLayout.edName.isEnabled = false
+                                                viewOfLayout.edEmail.isEnabled = false
+                                                viewOfLayout.edPhone.isEnabled = false
+                                                viewOfLayout.iv_camera.isEnabled = false
 
-                                            viewOfLayout.edName.isEnabled = false
-                                            viewOfLayout.edEmail.isEnabled = false
-                                            viewOfLayout.edPhone.isEnabled = false
-                                            viewOfLayout.iv_camera.isEnabled = false
-
-                                            viewOfLayout.btnUpdateProfile.visibility = View.GONE
+                                                viewOfLayout.btnUpdateProfile.visibility = View.GONE
 
 
+                                                Toast.makeText(context, response.body()!!.msg, Toast.LENGTH_SHORT).show()
+                                                myDialog.dismiss()
+
+                                            }
+                                            else{
+                                                Toast.makeText(context, response.body()!!.msg, Toast.LENGTH_SHORT).show()
+                                                myDialog.dismiss()
+
+                                            }
+
+                                        } else if (response.code() == 401) {
+                                            // Handle unauthorized
+                                            Toast.makeText(context, "Unauthorized", Toast.LENGTH_SHORT).show()
+                                            myDialog.dismiss()
+
+                                        } else if (response.code() == 501) {
+                                            // Handle unauthorized
+                                            Toast.makeText(context, "Server Error", Toast.LENGTH_SHORT).show()
+                                            myDialog.dismiss()
+
+                                        } else {
+                                            //response is failed
                                             Toast.makeText(context, response.body()!!.msg, Toast.LENGTH_SHORT).show()
                                             myDialog.dismiss()
 
-                                        }
-                                        else{
-                                            Toast.makeText(context, response.body()!!.msg, Toast.LENGTH_SHORT).show()
-                                            myDialog.dismiss()
 
                                         }
-
-                                    } else if (response.code() == 401) {
-                                        // Handle unauthorized
-                                        Toast.makeText(context, "Unauthorized", Toast.LENGTH_SHORT).show()
-                                        myDialog.dismiss()
-
-                                    } else if (response.code() == 501) {
-                                        // Handle unauthorized
-                                        Toast.makeText(context, "Server Error", Toast.LENGTH_SHORT).show()
-                                        myDialog.dismiss()
-
-                                    } else {
-                                        //response is failed
-                                        Toast.makeText(context, response.body()!!.msg, Toast.LENGTH_SHORT).show()
-                                        myDialog.dismiss()
-
 
                                     }
 
-                                }
+                                    override fun onFailure(call: Call<UpdateProfileResponse>, t: Throwable) {
+                                        Toast.makeText(context, t.toString(), Toast.LENGTH_SHORT).show()
+                                        myDialog.dismiss()
 
-                                override fun onFailure(call: Call<UpdateProfileResponse>, t: Throwable) {
-                                    Toast.makeText(context, t.toString(), Toast.LENGTH_SHORT).show()
-                                    myDialog.dismiss()
-
-                                }
+                                    }
 
 
-                            })
+                                })
+
+
+                        }catch (e:Exception){
+                            myDialog.dismiss()
+                            showSnackBarFrag("Please Select another image",activity!!.main_container)
+                        }
+
+
 
                     }
 
@@ -202,12 +210,10 @@ class ProfileFragment : BaseFragment() {
 
             }
 
-
-
         }
 
-
         return viewOfLayout
+
     }
 
 

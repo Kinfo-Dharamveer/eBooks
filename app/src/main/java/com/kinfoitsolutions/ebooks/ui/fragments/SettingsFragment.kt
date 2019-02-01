@@ -15,23 +15,27 @@ import android.view.Menu
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import com.drivingschool.android.customviews.CustomTextView
+import com.kinfoitsolutions.ebooks.ui.BaseFragment
 import com.kinfoitsolutions.ebooks.ui.Utils
 import com.kinfoitsolutions.ebooks.ui.model.ResetPassword.ResetPasswordResponse
 import com.kinfoitsolutions.ebooks.ui.restclient.RestClient
+import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.activity_reset_password.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
-class SettingsFragment : Fragment() {
+class SettingsFragment : BaseFragment() {
+
 
     private lateinit var viewOfLayout: View
     private lateinit var alertDialog: AlertDialog
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun provideYourFragmentView(inflater: LayoutInflater, parent: ViewGroup?, savedInstanceState: Bundle?): View {
+
         // Inflate the layout for this fragment
-        viewOfLayout = inflater.inflate(R.layout.fragment_settings, container, false)
+        viewOfLayout = inflater.inflate(R.layout.fragment_settings, parent, false)
         setHasOptionsMenu(true)
 
         viewOfLayout.shareApp.setOnClickListener {
@@ -59,6 +63,8 @@ class SettingsFragment : Fragment() {
 
     }
 
+
+
     private fun changePswDialog() {
 
         val dialogBuilder = AlertDialog.Builder(context!!)
@@ -76,33 +82,43 @@ class SettingsFragment : Fragment() {
 
         submitPsw.setOnClickListener {
 
-            val email = edEmail.text.toString()
-            val newPass = new_psw.text.toString()
-            val confirmPass = confirm_psw.text.toString()
+            if (isNetworkConnected(context!!)){
 
-            when {
-                email == "" -> {
-                    edEmail.setError("Enter your email")
+                val email = edEmail.text.toString()
+                val newPass = new_psw.text.toString()
+                val confirmPass = confirm_psw.text.toString()
+
+                when {
+                    email == "" -> {
+                        edEmail.setError("Enter your email")
+
+                    }
+                    newPass == "" -> {
+                        new_psw.setError("Enter your new password")
+
+                    }
+                    confirmPass == "" -> {
+                        confirm_psw.setError("Enter your confirm password")
+                    }
+                    !newPass.equals(confirmPass) -> {
+                        Utils.showSnackBar(context, "Password doesn't match", activity!!.main_container)
+                    }
+
+                    else -> {
+
+                        resetPasswordApi(email, newPass)
+
+                    }
 
                 }
-                newPass == "" -> {
-                    new_psw.setError("Enter your new password")
-
-                }
-                confirmPass == "" -> {
-                    confirm_psw.setError("Enter your confirm password")
-                }
-                !newPass.equals(confirmPass) -> {
-                    Utils.showSnackBar(context, "Password doesn't match", resetPswLayout)
-                }
-
-                else -> {
-
-                    resetPasswordApi(email, newPass)
-
-                }
-
             }
+            else {
+
+                showSnackBarFrag("Check your internet connection",activity!!.main_container)
+            }
+
+
+
         }
 
         alertDialog = dialogBuilder.create()
@@ -131,11 +147,13 @@ class SettingsFragment : Fragment() {
                 if (response.isSuccessful) {
 
                     if (response.body()!!.code.equals(100)) {
-                        Utils.showSnackBar(context, response.body()!!.msg, resetPswLayout)
+                        Utils.showSnackBar(context, response.body()!!.msg, activity!!.main_container)
                         myDialog.dismiss()
+                        alertDialog.dismiss()
+
 
                     } else {
-                        Utils.showSnackBar(context, response.body()!!.msg, resetPswLayout)
+                        Utils.showSnackBar(context, response.body()!!.msg, activity!!.main_container)
                         myDialog.dismiss()
 
                     }
@@ -143,18 +161,18 @@ class SettingsFragment : Fragment() {
 
                 } else if (response.code() == 401) {
                     // Handle unauthorized
-                    Utils.showSnackBar(context, "Unauthorized", resetPswLayout)
+                    Utils.showSnackBar(context, "Unauthorized", activity!!.main_container)
                     myDialog.dismiss()
 
 
                 } else if (response.code() == 500) {
                     // Handle unauthorized
-                    Utils.showSnackBar(context, "Server Error", resetPswLayout)
+                    Utils.showSnackBar(context, "Server Error", activity!!.main_container)
                     myDialog.dismiss()
 
                 } else {
                     //response is failed
-                    Utils.showSnackBar(context, response.body()!!.msg, resetPswLayout)
+                    Utils.showSnackBar(context, response.body()!!.msg, activity!!.main_container)
 
                     myDialog.dismiss()
 
@@ -166,7 +184,7 @@ class SettingsFragment : Fragment() {
 
             override fun onFailure(call: Call<ResetPasswordResponse>, t: Throwable) {
 
-                Utils.showSnackBar(context, t.toString(), resetPswLayout)
+                Utils.showSnackBar(context, t.toString(), activity!!.main_container)
                 myDialog.dismiss()
 
 

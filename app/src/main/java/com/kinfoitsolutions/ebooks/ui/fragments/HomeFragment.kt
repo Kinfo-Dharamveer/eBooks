@@ -69,7 +69,6 @@ class HomeFragment : Fragment(), RecommandedRecycleAdapter.mClickListener {
 
 
         //recommanded recyclerview code is here
-
         val layoutManager = GridLayoutManager(context, 3)
         viewOfLayout.recommanded_recyclerview.setLayoutManager(layoutManager)
         viewOfLayout.recommanded_recyclerview.setItemAnimator(DefaultItemAnimator())

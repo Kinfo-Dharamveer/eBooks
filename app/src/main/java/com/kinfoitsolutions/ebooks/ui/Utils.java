@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -21,6 +22,7 @@ public class Utils {
         m_Dialog.setCancelable(false);
         m_Dialog.show();
         return m_Dialog;
+
     }
 
 
