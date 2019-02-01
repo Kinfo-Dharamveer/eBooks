@@ -13,15 +13,21 @@ import android.widget.ImageView
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
+import com.drivingschool.android.AppConstants
 import com.kinfoitsolutions.ebooks.R
+import com.kinfoitsolutions.ebooks.ui.BaseFragment
+import com.kinfoitsolutions.ebooks.ui.Utils
 import com.kinfoitsolutions.ebooks.ui.adapters.RecommandedRecycleAdapter
 import com.kinfoitsolutions.ebooks.ui.model.RecommandedModelClass
+import com.kinfoitsolutions.ebooks.ui.restclient.RestClient
+import com.orhanobut.hawk.Hawk
+import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.fragment_home.*
 
 import kotlinx.android.synthetic.main.fragment_home.view.*
 
 
-class HomeFragment : Fragment(), RecommandedRecycleAdapter.mClickListener {
+class HomeFragment : BaseFragment(), RecommandedRecycleAdapter.mClickListener {
 
 
 
@@ -61,11 +67,10 @@ class HomeFragment : Fragment(), RecommandedRecycleAdapter.mClickListener {
         "Dale Carnegie","Malcolm Gladwell", "Jojo Moyes")
 
 
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun provideYourFragmentView(inflater: LayoutInflater, parent: ViewGroup?, savedInstanceState: Bundle?): View {
 
         // Inflate the layout for this fragment
-        viewOfLayout = inflater.inflate(R.layout.fragment_home, container, false)
+        viewOfLayout = inflater.inflate(R.layout.fragment_home, parent, false)
 
 
         //recommanded recyclerview code is here
@@ -95,8 +100,11 @@ class HomeFragment : Fragment(), RecommandedRecycleAdapter.mClickListener {
                 RecommandedModelClass(image1[i], title1[i], rating1[i], author_name1[i])
             recommandedModelClasses1.add(beanClassForRecyclerView_contacts)
         }
+
         bAdapter1 = RecommandedRecycleAdapter(context, recommandedModelClasses1,this)
         viewOfLayout.top50_books_recyclerview.setAdapter(bAdapter1)
+
+        //getAllBooksApi()
 
         viewOfLayout.viewAllRecommend.setOnClickListener {
 
@@ -114,6 +122,22 @@ class HomeFragment : Fragment(), RecommandedRecycleAdapter.mClickListener {
 
     }
 
+    private fun getAllBooksApi() {
+
+
+        if (isNetworkConnected(context!!)){
+
+            val myDialog = Utils.showProgressDialog(context, "Please wait......")
+            val restClient = RestClient.getClient()
+
+
+        }
+        else {
+            showSnackBarFrag("Check your internet connection",activity!!.main_container)
+
+        }
+
+    }
 
     override fun mClick(v: View?, position: Int) {
 
