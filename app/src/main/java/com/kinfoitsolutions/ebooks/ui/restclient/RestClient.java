@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kinfoitsolutions.ebooks.R;
 import com.kinfoitsolutions.ebooks.ui.model.ForgetResponse.ForgetResponse;
+import com.kinfoitsolutions.ebooks.ui.model.GetAllBooksResponse.GetAllBooksResponse;
 import com.kinfoitsolutions.ebooks.ui.model.Getprofile.GetProfileResponse;
 import com.kinfoitsolutions.ebooks.ui.model.LoginResponse;
 import com.kinfoitsolutions.ebooks.ui.model.Logout.LogoutResponse;
@@ -66,9 +67,6 @@ public class RestClient {
     }
 
 
-
-
-
     public interface GitApiInterface {
 
         @POST("users/login")
@@ -102,6 +100,9 @@ public class RestClient {
         @POST("users/reset_password")
         Call<ResetPasswordResponse> reset_password(@Body HashMap<String, String> hashMap);
 
+
+        @POST("users/getBooks")
+        Call<GetAllBooksResponse> get_books(@Body HashMap<String, String> hashMap);
 
 
     }

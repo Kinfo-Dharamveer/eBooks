@@ -9,6 +9,9 @@ public class Book {
     @SerializedName("id")
     @Expose
     private Integer id;
+    @SerializedName("book_type")
+    @Expose
+    private Integer bookType;
     @SerializedName("category_id")
     @Expose
     private Integer categoryId;
@@ -27,6 +30,12 @@ public class Book {
     @SerializedName("publication_year")
     @Expose
     private Object publicationYear;
+    @SerializedName("subscription_type")
+    @Expose
+    private Integer subscriptionType;
+    @SerializedName("subscription_price")
+    @Expose
+    private String subscriptionPrice;
     @SerializedName("status")
     @Expose
     private Integer status;
@@ -64,6 +73,14 @@ public class Book {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getBookType() {
+        return bookType;
+    }
+
+    public void setBookType(Integer bookType) {
+        this.bookType = bookType;
     }
 
     public Integer getCategoryId() {
@@ -112,6 +129,22 @@ public class Book {
 
     public void setPublicationYear(Object publicationYear) {
         this.publicationYear = publicationYear;
+    }
+
+    public Integer getSubscriptionType() {
+        return subscriptionType;
+    }
+
+    public void setSubscriptionType(Integer subscriptionType) {
+        this.subscriptionType = subscriptionType;
+    }
+
+    public String getSubscriptionPrice() {
+        return subscriptionPrice;
+    }
+
+    public void setSubscriptionPrice(String subscriptionPrice) {
+        this.subscriptionPrice = subscriptionPrice;
     }
 
     public Integer getStatus() {
