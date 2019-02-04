@@ -1,11 +1,15 @@
 package com.kinfoitsolutions.ebooks.ui.adapters;
 
+import android.app.SearchManager;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.drivingschool.android.customviews.CustomTextView;
 import com.kinfoitsolutions.ebooks.R;
@@ -18,6 +22,7 @@ public class AuthorsAdapter extends RecyclerView.Adapter<AuthorsAdapter.MyViewHo
 
     private List<AuthorsModel> authorsModelList;
     private Context context;
+
 
 
     public AuthorsAdapter(List<AuthorsModel> authorsModelList, Context context) {
@@ -48,6 +53,10 @@ public class AuthorsAdapter extends RecyclerView.Adapter<AuthorsAdapter.MyViewHo
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
+
+
+
+
 
         ImageView imageAuthor;
         BoldTextView textAuthorName;

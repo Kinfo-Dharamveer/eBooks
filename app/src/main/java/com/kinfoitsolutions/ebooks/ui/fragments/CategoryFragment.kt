@@ -85,6 +85,7 @@ class CategoryFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
         when (item.getItemId()) {
             R.id.action_category -> {
 

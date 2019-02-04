@@ -250,28 +250,14 @@ class DashboardActivity : BaseActivity(), NavigationView.OnNavigationItemSelecte
         menuInflater.inflate(R.menu.profile_menu, menu)
 
         val mSearch = menu.findItem(R.id.action_search)
-
         val mEdit = menu.findItem(R.id.action_edit)
         val mFilter = menu.findItem(R.id.action_filter)
         val mCatSearch = menu.findItem(R.id.action_category)
+
         mEdit.setVisible(false)
         mFilter.setVisible(false)
         mCatSearch.setVisible(false)
 
-
-        val mSearchView = mSearch.actionView as SearchView
-        mSearchView.setQueryHint("Search")
-
-        mSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String): Boolean {
-                // mAdapter.getFilter().filter(newText)
-                return true
-            }
-        })
 
         return super.onCreateOptionsMenu(menu)
     }

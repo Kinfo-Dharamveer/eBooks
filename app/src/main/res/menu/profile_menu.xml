@@ -6,8 +6,10 @@
             android:id="@+id/action_search"
             android:icon="@android:drawable/ic_menu_search"
             android:title="@string/search"
+            android:orderInCategory="100"
             app:actionViewClass="androidx.appcompat.widget.SearchView"
-            app:showAsAction="always" />
+            app:showAsAction="collapseActionView|ifRoom"
+    />
 
 
     <item

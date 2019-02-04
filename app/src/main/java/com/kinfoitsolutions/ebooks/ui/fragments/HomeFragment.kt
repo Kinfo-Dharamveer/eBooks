@@ -1,15 +1,19 @@
 package com.kinfoitsolutions.ebooks.ui.fragments
 
 
+import android.app.SearchManager
+import android.content.Context
+import android.content.Context.SEARCH_SERVICE
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import com.kinfoitsolutions.ebooks.ui.activities.DashboardActivity
-import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
+import android.util.Log
+import android.view.*
+import android.widget.ArrayAdapter
 import android.widget.ImageView
+import android.widget.Spinner
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
@@ -18,66 +22,35 @@ import com.kinfoitsolutions.ebooks.R
 import com.kinfoitsolutions.ebooks.ui.BaseFragment
 import com.kinfoitsolutions.ebooks.ui.Utils
 import com.kinfoitsolutions.ebooks.ui.adapters.RecommandedRecycleAdapter
-import com.kinfoitsolutions.ebooks.ui.model.GetAllBooksResponse.GetAllBooksResponse
-import com.kinfoitsolutions.ebooks.ui.model.RecommandedModelClass
+import com.kinfoitsolutions.ebooks.ui.model.GetAllBooksResponse.GetAllBooksSuccess
 import com.kinfoitsolutions.ebooks.ui.restclient.RestClient
 import com.orhanobut.hawk.Hawk
 import kotlinx.android.synthetic.main.activity_dashboard.*
-import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.activity_reset_password.*
 import kotlinx.android.synthetic.main.fragment_home.*
 
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
+import androidx.core.view.MenuItemCompat
+import com.kinfoitsolutions.ebooks.ui.adapters.SearchBookAdapter
+import com.kinfoitsolutions.ebooks.ui.model.SearchBooksResponse.SearchBookSuccess
 
 
-class HomeFragment : BaseFragment(), RecommandedRecycleAdapter.mClickListener {
+class HomeFragment : BaseFragment() {
 
     private lateinit var viewOfLayout: View
 
     //  recommanded data
-    private lateinit var recommandedModelClasses: ArrayList<RecommandedModelClass>
     private lateinit var bAdapter: RecommandedRecycleAdapter
+    private lateinit var searchAdapter: SearchBookAdapter
 
-    private val image = arrayOf(
-        R.drawable.blink_imges,
-        R.drawable.me_befor_you,
-        R.drawable.how_to_win,
-        R.drawable.me_befor_you,
-        R.drawable.how_to_win
-    )
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
 
-    private val title = arrayOf(
-        "Blink: The Power\n" + "of Thinking Wi…", "Me Before You",
-        "How to Win \n" + "Friends and Inf…", "Me Before You", "And John Carter"
-    )
-    private val rating = arrayOf("4.5", "4.0", "3.2", "1.2", "3.7")
-    private val author_name = arrayOf(
-        "Malcolm Gladwell", "Jojo Moyes",
-        "Dale Carnegie", "Malcolm Gladwell", "Jojo Moyes"
-    )
-
-
-    //  top_50 data
-    private lateinit var recommandedModelClasses1: ArrayList<RecommandedModelClass>
-    private lateinit var bAdapter1: RecommandedRecycleAdapter
-
-    private val image1 = arrayOf(
-        R.drawable.cantbury, R.drawable.the_dreaming, R.drawable.the_beauty_purpose,
-        R.drawable.cantbury, R.drawable.the_beauty_purpose
-    )
-    private val title1 = arrayOf(
-        "The Canterbury\n" + "Tales", "The Dreaming\n" + "Reality",
-        "The Beauty of\n" + "Purpose in Life…", "The Beauty of", "Reality"
-    )
-    private val rating1 = arrayOf("4.5", "4.0", "3.2", "1.2", "3.7")
-    private val author_name1 = arrayOf(
-        "Malcolm Gladwell", "Jojo Moyes",
-        "Dale Carnegie", "Malcolm Gladwell", "Jojo Moyes"
-    )
-
+    }
 
     override fun provideYourFragmentView(
         inflater: LayoutInflater,
@@ -94,33 +67,19 @@ class HomeFragment : BaseFragment(), RecommandedRecycleAdapter.mClickListener {
         viewOfLayout.recommanded_recyclerview.setLayoutManager(layoutManager)
         viewOfLayout.recommanded_recyclerview.setItemAnimator(DefaultItemAnimator())
 
-        recommandedModelClasses = ArrayList()
 
-        for (i in 0 until image.size) {
-            val beanClassForRecyclerView_contacts = RecommandedModelClass(image[i], title[i], rating[i], author_name[i])
-            recommandedModelClasses.add(beanClassForRecyclerView_contacts)
-        }
-        bAdapter = RecommandedRecycleAdapter(context, recommandedModelClasses, this)
-        viewOfLayout.recommanded_recyclerview.setAdapter(bAdapter)
+        //Recommended Apps Data
+        getAllBooksApi()
 
-
-        //   recommanded recyclerview code is here
+        //   top 50 recyclerview code is here
         val layoutManager1 = GridLayoutManager(context, 3)
         viewOfLayout.top50_books_recyclerview.setLayoutManager(layoutManager1)
         viewOfLayout.top50_books_recyclerview.setItemAnimator(DefaultItemAnimator())
 
-        recommandedModelClasses1 = ArrayList()
 
-        for (i in 0 until image.size) {
-            val beanClassForRecyclerView_contacts =
-                RecommandedModelClass(image1[i], title1[i], rating1[i], author_name1[i])
-            recommandedModelClasses1.add(beanClassForRecyclerView_contacts)
-        }
+        // bAdapter1 = RecommandedRecycleAdapter(context, recommandedModelClasses1, this)
+        //  viewOfLayout.top50_books_recyclerview.setAdapter(bAdapter1)
 
-        bAdapter1 = RecommandedRecycleAdapter(context, recommandedModelClasses1, this)
-        viewOfLayout.top50_books_recyclerview.setAdapter(bAdapter1)
-
-        //getAllBooksApi()
 
         viewOfLayout.viewAllRecommend.setOnClickListener {
 
@@ -151,19 +110,37 @@ class HomeFragment : BaseFragment(), RecommandedRecycleAdapter.mClickListener {
             stringHashMap.put("token", Hawk.get(AppConstants.TOKEN))
             stringHashMap.put("orderby", "0")
 
-            restClient.get_books(stringHashMap).enqueue(object : Callback<GetAllBooksResponse> {
+            restClient.get_books(stringHashMap).enqueue(object : Callback<GetAllBooksSuccess>,
+                RecommandedRecycleAdapter.mClickListener {
 
-                override fun onResponse(call: Call<GetAllBooksResponse>, response: Response<GetAllBooksResponse>) {
+                override fun mClick(v: View?, position: Int) {
+                    Navigation.findNavController(homeFragContainer)
+                        .navigate(R.id.action_homeFragment_to_bookReadingFragment);
+
+                }
+
+                override fun onResponse(call: Call<GetAllBooksSuccess>, response: Response<GetAllBooksSuccess>) {
 
                     if (response.isSuccessful) {
 
-                        if (response.body()!!.code.equals(100)){
-                            Utils.showSnackBar(context,response.body()!!.msg,activity!!.main_container)
+                        if (response.body()!!.code.equals("100")) {
+
+
+                            val allBooks = response.body()!!.books
+
+                            bAdapter = RecommandedRecycleAdapter(context, allBooks, this)
+                            viewOfLayout.recommanded_recyclerview.setAdapter(bAdapter)
+
+
+
+                            bAdapter.notifyDataSetChanged()
+
+
+                            Utils.showSnackBar(context, "Success", activity!!.main_container)
                             myDialog.dismiss()
 
-                        }
-                        else {
-                            Utils.showSnackBar(context,response.body()!!.msg,activity!!.main_container)
+                        } else {
+                            Utils.showSnackBar(context, response.body()!!.msg, activity!!.main_container)
                             myDialog.dismiss()
 
                         }
@@ -184,7 +161,7 @@ class HomeFragment : BaseFragment(), RecommandedRecycleAdapter.mClickListener {
 
                     } else {
                         //response is failed
-                        Utils.showSnackBar(context, response.body()!!.msg, activity!!.main_container)
+                        Utils.showSnackBar(context, "Failed", activity!!.main_container)
                         myDialog.dismiss()
 
 
@@ -192,7 +169,7 @@ class HomeFragment : BaseFragment(), RecommandedRecycleAdapter.mClickListener {
                 }
 
 
-                override fun onFailure(call: Call<GetAllBooksResponse>, t: Throwable) {
+                override fun onFailure(call: Call<GetAllBooksSuccess>, t: Throwable) {
 
                     Utils.showSnackBar(context, t.toString(), activity!!.main_container)
                     myDialog.dismiss()
@@ -208,11 +185,139 @@ class HomeFragment : BaseFragment(), RecommandedRecycleAdapter.mClickListener {
 
     }
 
-    override fun mClick(v: View?, position: Int) {
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        menu.findItem(R.id.action_category).setVisible(false)
+        menu.findItem(R.id.action_edit).setVisible(false)
+        menu.findItem(R.id.action_filter).setVisible(false)
+        menu.findItem(R.id.action_search).setVisible(true)
+        super.onPrepareOptionsMenu(menu)
 
-        Navigation.findNavController(homeFragContainer).navigate(R.id.action_homeFragment_to_bookReadingFragment);
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+
+
+        val searchItem = menu.findItem(R.id.action_search)
+
+        val searchManager = activity!!.getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        val searchView = searchItem.actionView as SearchView
+
+        // MenuItemCompat.setShowAsAction(searchItem, MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW or MenuItemCompat.SHOW_AS_ACTION_IF_ROOM)
+        //  MenuItemCompat.setActionView(searchItem, searchView)
+
+
+        if (searchView != null) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity()!!.getComponentName()))
+
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String): Boolean {
+
+                    // Toast.makeText(context,"onQueryTextChange"+query,Toast.LENGTH_SHORT).show()
+                    searchApiCall(query)
+
+                    return true
+                }
+
+                override fun onQueryTextChange(newText: String): Boolean {
+                    //Toast.makeText(context,"onQueryTextSubmit"+newText,Toast.LENGTH_SHORT).show()
+
+                    searchApiCall(newText)
+
+                    //bAdapter.getFilter().filter(newText)
+                    return true
+                }
+            })
+
+            super.onCreateOptionsMenu(menu, inflater)
+
+        }
+
+
+    }
+
+    private fun searchApiCall(searchText: String) {
+
+        if (isNetworkConnected(context!!)) {
+
+            val myDialog = Utils.showProgressDialog(context, "Please wait......")
+
+            val restClient = RestClient.getClient()
+
+            val stringHashMap = HashMap<String, String>()
+            stringHashMap.put("token", Hawk.get(AppConstants.TOKEN))
+            stringHashMap.put("term", searchText)
+
+            restClient.searchBook(stringHashMap).enqueue(object : Callback<SearchBookSuccess>, SearchBookAdapter.mSearchClickListener {
+
+                override fun mSearchClick(v: View?, position: Int) {
+                    Navigation.findNavController(homeFragContainer).navigate(R.id.action_homeFragment_to_bookReadingFragment);
+                }
+
+                override fun onResponse(call: Call<SearchBookSuccess>, response: Response<SearchBookSuccess>) {
+
+                    if (response.isSuccessful) {
+
+                        if (response.body()!!.code.equals("100")) {
+
+                            val searchAllBooks = response.body()!!.books
+
+                            searchAdapter = SearchBookAdapter(searchAllBooks, context, this)
+                            viewOfLayout.recommanded_recyclerview.setAdapter(searchAdapter)
+
+                            searchAdapter.notifyDataSetChanged()
+
+                            Utils.showSnackBar(context, "Success", activity!!.main_container)
+                            myDialog.dismiss()
+
+                        } else {
+                            Utils.showSnackBar(context, response.body()!!.msg, activity!!.main_container)
+                            myDialog.dismiss()
+
+                        }
+
+
+                    } else if (response.code() == 401) {
+                        // Handle unauthorized
+                        Utils.showSnackBar(context, "Unauthorized", activity!!.main_container)
+                        myDialog.dismiss()
+
+
+                    } else if (response.code() == 500) {
+                        // Handle unauthorized
+
+                        Utils.showSnackBar(context, "Server Error", activity!!.main_container)
+                        myDialog.dismiss()
+
+
+                    } else {
+                        //response is failed
+                        Utils.showSnackBar(context, "Failed", activity!!.main_container)
+                        myDialog.dismiss()
+
+
+                    }
+                }
+
+
+                override fun onFailure(call: Call<SearchBookSuccess>, t: Throwable) {
+
+                    Utils.showSnackBar(context, t.toString(), activity!!.main_container)
+                    myDialog.dismiss()
+
+                }
+            })
+
+
+        } else {
+            showSnackBarFrag("Check your internet connection", activity!!.main_container)
+
+        }
 
     }
 
 
+
+
 }
+
+

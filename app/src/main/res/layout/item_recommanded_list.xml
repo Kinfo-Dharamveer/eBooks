@@ -19,7 +19,8 @@
                 android:layout_width="97.8dp"
                 android:layout_height="146dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/blink_imges"/>
+                android:src="@drawable/loading"/>
+
 
         <com.kinfoitsolutions.ebooks.ui.customviews.BoldTextView
                 android:id="@+id/title"

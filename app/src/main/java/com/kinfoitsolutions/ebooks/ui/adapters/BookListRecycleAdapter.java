@@ -8,14 +8,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.kinfoitsolutions.ebooks.R;
+import com.kinfoitsolutions.ebooks.ui.model.GetAllBooksResponse.BookPayload;
 import com.kinfoitsolutions.ebooks.ui.model.RecommandedModelClass;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class BookListRecycleAdapter extends RecyclerView.Adapter<BookListRecycleAdapter.MyViewHolder> {
 
     Context context;
-    private List<RecommandedModelClass> OfferList;
+    private List<BookPayload> OfferList;
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -41,7 +43,7 @@ public class BookListRecycleAdapter extends RecyclerView.Adapter<BookListRecycle
     }
 
 
-    public BookListRecycleAdapter(Context context, List<RecommandedModelClass> offerList) {
+    public BookListRecycleAdapter(Context context, List<BookPayload> offerList) {
         this.OfferList = offerList;
         this.context = context;
     }
@@ -59,11 +61,24 @@ public class BookListRecycleAdapter extends RecyclerView.Adapter<BookListRecycle
 
     @Override
     public void onBindViewHolder( final MyViewHolder holder, final int position) {
-        final RecommandedModelClass lists = OfferList.get(position);
-        holder.title.setText(lists.getTitle());
-        holder.rating.setText(lists.getRating());
-        holder.author_name.setText(lists.getAuthor_name());
-        holder.imageView.setImageResource(lists.getImage());
+
+        final BookPayload book = OfferList.get(position);
+
+        holder.title.setText(book.getName());
+        holder.rating.setText("3");
+        holder.author_name.setText(book.getAuthorName());
+
+
+        try {
+            Picasso.get().load(book.getBookImage()).fit()
+                    .placeholder(R.drawable.loading)
+                    .error(R.drawable.no_image)
+                    .into(holder.imageView);
+        } catch (Exception e) {
+            e.printStackTrace();
+            holder.imageView.setImageResource(R.drawable.no_image);
+        }
+
 
 
 

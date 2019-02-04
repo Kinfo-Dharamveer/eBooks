@@ -1,21 +1,16 @@
 package com.kinfoitsolutions.ebooks.ui.restclient;
 
 
-import android.content.Context;
-import android.content.ContextWrapper;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.widget.ImageView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.kinfoitsolutions.ebooks.R;
 import com.kinfoitsolutions.ebooks.ui.model.ForgetResponse.ForgetResponse;
-import com.kinfoitsolutions.ebooks.ui.model.GetAllBooksResponse.GetAllBooksResponse;
+import com.kinfoitsolutions.ebooks.ui.model.GetAllBooksResponse.GetAllBooksSuccess;
 import com.kinfoitsolutions.ebooks.ui.model.Getprofile.GetProfileResponse;
 import com.kinfoitsolutions.ebooks.ui.model.LoginResponse;
 import com.kinfoitsolutions.ebooks.ui.model.Logout.LogoutResponse;
 import com.kinfoitsolutions.ebooks.ui.model.RegisterResponse.RegisterResponse;
 import com.kinfoitsolutions.ebooks.ui.model.ResetPassword.ResetPasswordResponse;
+import com.kinfoitsolutions.ebooks.ui.model.SearchBooksResponse.SearchBookSuccess;
 import com.kinfoitsolutions.ebooks.ui.model.UpdateProfile.UpdateProfileResponse;
 import com.kinfoitsolutions.ebooks.ui.model.VerifyOtp.VerifyOtpResponse;
 import okhttp3.MultipartBody;
@@ -27,7 +22,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.*;
 
-import java.io.*;
 import java.util.HashMap;
 
 
@@ -101,8 +95,12 @@ public class RestClient {
         Call<ResetPasswordResponse> reset_password(@Body HashMap<String, String> hashMap);
 
 
-        @POST("users/getBooks")
-        Call<GetAllBooksResponse> get_books(@Body HashMap<String, String> hashMap);
+        @POST("books/get_books")
+        Call<GetAllBooksSuccess> get_books(@Body HashMap<String, String> hashMap);
+
+
+        @POST("books/search")
+        Call<SearchBookSuccess> searchBook(@Body HashMap<String, String> hashMap);
 
 
     }

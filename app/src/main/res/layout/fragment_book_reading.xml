@@ -68,6 +68,7 @@ Thinking"
 
 
 
+
             <com.kinfoitsolutions.ebooks.ui.customviews.TextViewGiorgia
                     android:id="@+id/text"
                     android:layout_width="match_parent"

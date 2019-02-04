@@ -46,6 +46,7 @@ class BookReadingFragment : Fragment(), View.OnClickListener {
         viewOfLayout.audio.setOnClickListener(this)
 
 
+
         return viewOfLayout
 
     }

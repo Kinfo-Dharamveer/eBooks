@@ -11,21 +11,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.drivingschool.android.customviews.CustomTextView;
 import com.kinfoitsolutions.ebooks.R;
 import com.kinfoitsolutions.ebooks.ui.model.DownloadModelClass;
+import com.kinfoitsolutions.ebooks.ui.model.GetAllBooksResponse.BookPayload;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHolder> {
 
-    private List<DownloadModelClass> downloadModelClassList;
+    private List<BookPayload> downloadModelClassList;
     private Context context;
     private mDownloadListener mDownloadListener;
 
     public interface mDownloadListener{
-        public void mClick(View v, int position);
+        public void mPdfDownload(View v, int position,String pdfLink);
     }
 
 
-    public DownloadAdapter(List<DownloadModelClass> downloadModelClassList, Context context,mDownloadListener downloadListener) {
+    public DownloadAdapter(List<BookPayload> downloadModelClassList, Context context,mDownloadListener downloadListener) {
         this.downloadModelClassList = downloadModelClassList;
         this.context = context;
         this.mDownloadListener = downloadListener;
@@ -44,17 +46,28 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
 
-        final DownloadModelClass lists = downloadModelClassList.get(position);
+        final BookPayload lists = downloadModelClassList.get(position);
 
-        holder.title.setText(lists.getTitle());
-        holder.author_name.setText(lists.getAuthor_name());
-        holder.imageView.setImageResource(lists.getImage());
+        holder.title.setText(lists.getName());
+        holder.author_name.setText(lists.getAuthorName());
+
+
+        try {
+            Picasso.get().load(lists.getBookImage()).fit()
+                    .placeholder(R.drawable.loading)
+                    .error(R.drawable.no_image)
+                    .into(holder.imageView);
+        } catch (Exception e) {
+            e.printStackTrace();
+            holder.imageView.setImageResource(R.drawable.no_image);
+        }
+
 
 
         holder.btnDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDownloadListener.mClick(view,position);
+                mDownloadListener.mPdfDownload(view,position,lists.getBookFile());
             }
         });
 
