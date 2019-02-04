@@ -29,8 +29,6 @@ import kotlinx.android.synthetic.main.fragment_home.view.*
 
 class HomeFragment : BaseFragment(), RecommandedRecycleAdapter.mClickListener {
 
-
-
     private lateinit var viewOfLayout: View
 
     //  recommanded data
@@ -144,5 +142,6 @@ class HomeFragment : BaseFragment(), RecommandedRecycleAdapter.mClickListener {
         Navigation.findNavController(homeFragContainer).navigate(R.id.action_homeFragment_to_bookReadingFragment);
 
     }
+    
 
 }
