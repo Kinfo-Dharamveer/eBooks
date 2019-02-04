@@ -3,16 +3,19 @@ package com.kinfoitsolutions.ebooks.ui.restclient;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.kinfoitsolutions.ebooks.ui.model.ForgetResponse.ForgetResponse;
-import com.kinfoitsolutions.ebooks.ui.model.GetAllBooksResponse.GetAllBooksSuccess;
-import com.kinfoitsolutions.ebooks.ui.model.Getprofile.GetProfileResponse;
-import com.kinfoitsolutions.ebooks.ui.model.LoginResponse;
-import com.kinfoitsolutions.ebooks.ui.model.Logout.LogoutResponse;
-import com.kinfoitsolutions.ebooks.ui.model.RegisterResponse.RegisterResponse;
-import com.kinfoitsolutions.ebooks.ui.model.ResetPassword.ResetPasswordResponse;
-import com.kinfoitsolutions.ebooks.ui.model.SearchBooksResponse.SearchBookSuccess;
-import com.kinfoitsolutions.ebooks.ui.model.UpdateProfile.UpdateProfileResponse;
-import com.kinfoitsolutions.ebooks.ui.model.VerifyOtp.VerifyOtpResponse;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.ForgetResponse.ForgetResponse;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.GetAllBooksResponse.GetAllBooksSuccess;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.Getprofile.GetProfileResponse;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.LoginResponse;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.Logout.LogoutResponse;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.RegisterResponse.RegisterResponse;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.ResetPassword.ResetPasswordResponse;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.SearchBooksResponse.SearchBookSuccess;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.UpdateProfile.UpdateProfileResponse;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.VerifyOtp.VerifyOtpResponse;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.authorsbooksresponse.GetAuthorsBooksSuccess;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.categorybooksresponse.BooksCatSuccess;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.latestBooks.LatestBooksSuccess;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
@@ -101,6 +104,17 @@ public class RestClient {
 
         @POST("books/search")
         Call<SearchBookSuccess> searchBook(@Body HashMap<String, String> hashMap);
+
+        @POST("books/book_by_author")
+        Call<GetAuthorsBooksSuccess> getBooksByAuthors(@Body HashMap<String, String> hashMap);
+
+        @POST("books/book_by_category")
+        Call<BooksCatSuccess> getBooksByCat(@Body HashMap<String, String> hashMap);
+
+
+        @POST("books/latest_books")
+        Call<LatestBooksSuccess> getLatestBooks(@Body HashMap<String, String> hashMap);
+
 
 
     }

@@ -9,9 +9,7 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
-import androidx.appcompat.widget.SearchView
 import androidx.core.view.GravityCompat
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
@@ -26,10 +24,8 @@ import com.kinfoitsolutions.ebooks.ui.customviews.CustomTypefaceSpan
 import com.orhanobut.hawk.Hawk
 import com.kinfoitsolutions.ebooks.ui.Utils
 import com.kinfoitsolutions.ebooks.ui.Utils.showSnackBar
-import com.kinfoitsolutions.ebooks.ui.data.MessageEvent
-import com.kinfoitsolutions.ebooks.ui.model.Logout.LogoutResponse
+import com.kinfoitsolutions.ebooks.ui.responsemodel.Logout.LogoutResponse
 import com.kinfoitsolutions.ebooks.ui.restclient.RestClient
-import org.greenrobot.eventbus.Subscribe
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

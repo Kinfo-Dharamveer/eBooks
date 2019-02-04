@@ -8,8 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.kinfoitsolutions.ebooks.R;
-import com.kinfoitsolutions.ebooks.ui.model.GetAllBooksResponse.BookPayload;
-import com.kinfoitsolutions.ebooks.ui.model.RecommandedModelClass;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.GetAllBooksResponse.BookPayload;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

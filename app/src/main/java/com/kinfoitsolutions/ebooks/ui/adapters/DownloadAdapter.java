@@ -10,8 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.drivingschool.android.customviews.CustomTextView;
 import com.kinfoitsolutions.ebooks.R;
-import com.kinfoitsolutions.ebooks.ui.model.DownloadModelClass;
-import com.kinfoitsolutions.ebooks.ui.model.GetAllBooksResponse.BookPayload;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.GetAllBooksResponse.BookPayload;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -23,7 +22,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHo
     private mDownloadListener mDownloadListener;
 
     public interface mDownloadListener{
-        public void mPdfDownload(View v, int position,String pdfLink);
+         void mPdfDownload(View v, int position,String pdfLink);
     }
 
 

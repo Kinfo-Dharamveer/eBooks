@@ -1,6 +1,5 @@
 package com.kinfoitsolutions.ebooks.ui.adapters;
 
-import android.app.SearchManager;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +8,7 @@ import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.kinfoitsolutions.ebooks.R;
-import com.kinfoitsolutions.ebooks.ui.model.GetAllBooksResponse.BookPayload;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.GetAllBooksResponse.BookPayload;
 import com.squareup.picasso.Picasso;
 import org.jetbrains.annotations.NotNull;
 

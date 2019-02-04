@@ -3,7 +3,6 @@ package com.kinfoitsolutions.ebooks.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.*
 import android.widget.Toast
 import com.kinfoitsolutions.ebooks.R
@@ -20,14 +19,12 @@ import android.util.Log
 import com.drivingschool.android.AppConstants
 import com.kinfoitsolutions.ebooks.ui.BaseFragment
 import com.kinfoitsolutions.ebooks.ui.Utils
-import com.kinfoitsolutions.ebooks.ui.Utils.showSnackBar
-import com.kinfoitsolutions.ebooks.ui.model.Getprofile.GetProfileResponse
-import com.kinfoitsolutions.ebooks.ui.model.UpdateProfile.UpdateProfileResponse
+import com.kinfoitsolutions.ebooks.ui.responsemodel.Getprofile.GetProfileResponse
+import com.kinfoitsolutions.ebooks.ui.responsemodel.UpdateProfile.UpdateProfileResponse
 import com.kinfoitsolutions.ebooks.ui.restclient.RestClient
 import com.orhanobut.hawk.Hawk
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_dashboard.*
-import kotlinx.android.synthetic.main.fragment_profile.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

@@ -22,7 +22,10 @@
     <fragment android:id="@+id/categoryFragment"
               android:name="com.kinfoitsolutions.ebooks.ui.fragments.CategoryFragment"
               android:label="Category"
-              tools:layout="@layout/fragment_category"/>
+              tools:layout="@layout/fragment_category">
+        <action android:id="@+id/action_categoryFragment_to_allCategoryBooksFragment"
+                app:destination="@id/allCategoryBooksFragment"/>
+    </fragment>
 
     <fragment android:id="@+id/latestFragment"
               android:name="com.kinfoitsolutions.ebooks.ui.fragments.LatestFragment"
@@ -36,8 +39,11 @@
 
     <fragment android:id="@+id/authorFragment"
               android:name="com.kinfoitsolutions.ebooks.ui.fragments.AuthorFragment"
-              android:label="Author"
-              tools:layout="@layout/fragment_author"/>
+              android:label="Authors"
+              tools:layout="@layout/fragment_author">
+        <action android:id="@+id/action_authorFragment_to_authorBooksFragment"
+                app:destination="@id/authorBooksFragment"/>
+    </fragment>
 
     <fragment android:id="@+id/downloadFragment"
               android:name="com.kinfoitsolutions.ebooks.ui.fragments.DownloadFragment"
@@ -59,7 +65,7 @@
         <action android:id="@+id/action_bookReadingFragment_to_audioFragment" app:destination="@id/audioFragment"/>
     </fragment>
     <fragment android:id="@+id/viewAllFragment"
-              android:name="com.kinfoitsolutions.ebooks.ui.fragments.ViewAllFragment"
+              android:name="com.kinfoitsolutions.ebooks.ui.fragments.ViewAllBooksFragment"
               tools:layout="@layout/fragment_view_all"
               android:label="All Books"/>
     <fragment android:id="@+id/audioFragment"
@@ -67,5 +73,13 @@
               android:label="Audio"
               tools:layout="@layout/fragment_audio"
     />
+    <fragment android:id="@+id/allCategoryBooksFragment"
+              android:name="com.kinfoitsolutions.ebooks.ui.fragments.AllCategoryBooksFragment"
+              android:label="All Category Books"
+              tools:layout="@layout/fragment_all_category_books"/>
+    <fragment android:id="@+id/authorBooksFragment"
+              android:name="com.kinfoitsolutions.ebooks.ui.fragments.AuthorBooksFragment"
+              android:label="Author Books"
+              tools:layout="@layout/fragment_author_books"/>
 
 </navigation>

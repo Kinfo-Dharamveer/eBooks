@@ -3,17 +3,9 @@ package com.kinfoitsolutions.ebooks.ui.fragments
 
 import android.app.SearchManager
 import android.content.Context
-import android.content.Context.SEARCH_SERVICE
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import android.widget.ArrayAdapter
-import android.widget.ImageView
-import android.widget.Spinner
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
@@ -22,7 +14,7 @@ import com.kinfoitsolutions.ebooks.R
 import com.kinfoitsolutions.ebooks.ui.BaseFragment
 import com.kinfoitsolutions.ebooks.ui.Utils
 import com.kinfoitsolutions.ebooks.ui.adapters.RecommandedRecycleAdapter
-import com.kinfoitsolutions.ebooks.ui.model.GetAllBooksResponse.GetAllBooksSuccess
+import com.kinfoitsolutions.ebooks.ui.responsemodel.GetAllBooksResponse.GetAllBooksSuccess
 import com.kinfoitsolutions.ebooks.ui.restclient.RestClient
 import com.orhanobut.hawk.Hawk
 import kotlinx.android.synthetic.main.activity_dashboard.*
@@ -33,9 +25,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
-import androidx.core.view.MenuItemCompat
 import com.kinfoitsolutions.ebooks.ui.adapters.SearchBookAdapter
-import com.kinfoitsolutions.ebooks.ui.model.SearchBooksResponse.SearchBookSuccess
+import com.kinfoitsolutions.ebooks.ui.responsemodel.SearchBooksResponse.SearchBookSuccess
 
 
 class HomeFragment : BaseFragment() {

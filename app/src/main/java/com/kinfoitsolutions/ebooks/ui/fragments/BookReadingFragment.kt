@@ -18,6 +18,9 @@ import com.kinfoitsolutions.ebooks.R
 import kotlinx.android.synthetic.main.fragment_book_reading.*
 import kotlinx.android.synthetic.main.fragment_book_reading.view.*
 import kotlinx.android.synthetic.main.fragment_home.*
+import android.webkit.WebView
+
+
 
 
 class BookReadingFragment : Fragment(), View.OnClickListener {
@@ -39,6 +42,7 @@ class BookReadingFragment : Fragment(), View.OnClickListener {
 
         viewOfLayout.text.setTextIsSelectable(true)
 
+
         viewOfLayout.linear1.setOnClickListener(this)
         viewOfLayout.linear2.setOnClickListener(this)
         viewOfLayout.linear3.setOnClickListener(this)
@@ -56,7 +60,6 @@ class BookReadingFragment : Fragment(), View.OnClickListener {
         super.onPrepareOptionsMenu(menu)
 
     }
-
 
 
     override fun onClick(v: View) {

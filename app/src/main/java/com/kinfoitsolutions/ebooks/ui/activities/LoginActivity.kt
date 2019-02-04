@@ -1,28 +1,20 @@
 package com.kinfoitsolutions.ebooks.ui.activities
 
-import android.content.Context
 import android.content.Intent
-import android.net.ConnectivityManager
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import com.drivingschool.android.AppConstants
 import com.kinfoitsolutions.ebooks.R
 import com.kinfoitsolutions.ebooks.ui.BaseActivity
 import com.kinfoitsolutions.ebooks.ui.Utils
-import com.kinfoitsolutions.ebooks.ui.model.LoginResponse
+import com.kinfoitsolutions.ebooks.ui.responsemodel.LoginResponse
 import com.kinfoitsolutions.ebooks.ui.restclient.RestClient
 import com.orhanobut.hawk.Hawk
 import kotlinx.android.synthetic.main.activity_login.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import android.view.ViewStub
-import com.kinfoitsolutions.ebooks.ui.Utils.showNoInternetSnackbar
 import com.kinfoitsolutions.ebooks.ui.Utils.showSnackBar
-import com.kinfoitsolutions.ebooks.ui.data.MessageEvent
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
 
 
 class LoginActivity : BaseActivity() {

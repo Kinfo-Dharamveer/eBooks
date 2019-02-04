@@ -1,37 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:orientation="vertical"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_margin="@dimen/_5sdp">
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                   android:orientation="vertical"
+                                   android:layout_width="wrap_content"
+                                   android:layout_height="wrap_content"
+                                   android:layout_margin="8dp"
+                                   android:id="@+id/authorRowClick"
+                                   app:cardCornerRadius="5dp">
 
 
-    <ImageView
-            android:id="@+id/imageAuthor"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_150sdp"
-            android:src="@drawable/cantbury"
-            android:scaleType="fitXY"/>
+    <FrameLayout android:layout_width="wrap_content"
+                 android:layout_height="wrap_content">
+
+        <ImageView android:layout_width="match_parent"
+                   android:layout_height="160dp"
+                   android:scaleType="fitXY"
+                   android:id="@+id/authorImage"
+        />
 
 
-    <RelativeLayout android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:background="@drawable/gradient_shape">
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                      android:layout_gravity="bottom"
+                      android:gravity="center"
+                      android:background="@drawable/gradient_shape">
 
 
-    <com.kinfoitsolutions.ebooks.ui.customviews.BoldTextView
-            android:id="@+id/textAuthorName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Author Name"
-            android:gravity="center"
-            android:padding="@dimen/_10sdp"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_13sdp"
-            />
-
-    </RelativeLayout>
+            <com.kinfoitsolutions.ebooks.ui.customviews.BoldTextView
+                    android:id="@+id/authorName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Comic"
+                    android:padding="2dp"
+                    android:textSize="@dimen/_12sdp"
+                    android:layout_gravity="center"
+                    android:textColor="@color/lightwhite"/>
 
 
-</FrameLayout>
+        </LinearLayout>
+
+    </FrameLayout>
+
+
+</androidx.cardview.widget.CardView>

@@ -2,20 +2,16 @@ package com.kinfoitsolutions.ebooks.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import com.drivingschool.android.AppConstants
 import com.kinfoitsolutions.ebooks.R
 import com.kinfoitsolutions.ebooks.ui.BaseActivity
 import com.kinfoitsolutions.ebooks.ui.Utils
 import com.kinfoitsolutions.ebooks.ui.Utils.showSnackBar
-import com.kinfoitsolutions.ebooks.ui.data.MessageEvent
-import com.kinfoitsolutions.ebooks.ui.model.RegisterResponse.RegisterResponse
+import com.kinfoitsolutions.ebooks.ui.responsemodel.RegisterResponse.RegisterResponse
 import com.kinfoitsolutions.ebooks.ui.restclient.RestClient
 import com.orhanobut.hawk.Hawk
 import kotlinx.android.synthetic.main.activity_sign_up.*
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

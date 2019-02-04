@@ -3,7 +3,6 @@ package com.kinfoitsolutions.ebooks.ui.activities
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -13,12 +12,10 @@ import com.kinfoitsolutions.ebooks.R
 import com.kinfoitsolutions.ebooks.ui.BaseActivity
 import com.kinfoitsolutions.ebooks.ui.Utils
 import com.kinfoitsolutions.ebooks.ui.Utils.showSnackBar
-import com.kinfoitsolutions.ebooks.ui.data.MessageEvent
-import com.kinfoitsolutions.ebooks.ui.model.ForgetResponse.ForgetResponse
-import com.kinfoitsolutions.ebooks.ui.model.VerifyOtp.VerifyOtpResponse
+import com.kinfoitsolutions.ebooks.ui.responsemodel.ForgetResponse.ForgetResponse
+import com.kinfoitsolutions.ebooks.ui.responsemodel.VerifyOtp.VerifyOtpResponse
 import com.kinfoitsolutions.ebooks.ui.restclient.RestClient
 import kotlinx.android.synthetic.main.activity_forget_password.*
-import org.greenrobot.eventbus.Subscribe
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

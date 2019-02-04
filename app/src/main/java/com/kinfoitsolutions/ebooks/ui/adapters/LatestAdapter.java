@@ -10,16 +10,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.kinfoitsolutions.ebooks.R;
-import com.kinfoitsolutions.ebooks.ui.model.RecommandedModelClass;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.RecommandedModelClass;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.latestBooks.LatestBooksPayload;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class LatestAdapter extends RecyclerView.Adapter<LatestAdapter.MyViewHolder> {
 
-    private List<RecommandedModelClass> latestList;
+    private List<LatestBooksPayload> latestList;
     private Context context;
 
-    public LatestAdapter(List<RecommandedModelClass> latestList, Context context) {
+
+    public LatestAdapter(List<LatestBooksPayload> latestList, Context context) {
         this.latestList = latestList;
         this.context = context;
     }
@@ -35,12 +38,25 @@ public class LatestAdapter extends RecyclerView.Adapter<LatestAdapter.MyViewHold
     @Override
     public void onBindViewHolder(@NonNull LatestAdapter.MyViewHolder holder, int position) {
 
-        final RecommandedModelClass lists = latestList.get(position);
+        final LatestBooksPayload lists = latestList.get(position);
 
-        holder.title.setText(lists.getTitle());
-        holder.rating.setText(lists.getRating());
-        holder.author_name.setText(lists.getAuthor_name());
-        holder.imageView.setImageResource(lists.getImage());
+        holder.title.setText(lists.getName());
+        holder.rating.setText("5");
+        holder.author_name.setText(lists.getAuthorName());
+
+
+        try {
+            Picasso.get().load(lists.getBookImage()).fit()
+                    .placeholder(R.drawable.loading)
+                    .error(R.drawable.no_image)
+                    .into(holder.imageView);
+        } catch (Exception e) {
+            e.printStackTrace();
+            holder.imageView.setImageResource(R.drawable.no_image);
+        }
+
+
+
 
     }
 

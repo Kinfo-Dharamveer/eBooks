@@ -6,24 +6,34 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.kinfoitsolutions.ebooks.R;
 import com.kinfoitsolutions.ebooks.ui.customviews.BoldTextView;
 import com.kinfoitsolutions.ebooks.ui.customviews.RegularTextView;
-import com.kinfoitsolutions.ebooks.ui.model.CategoryModel;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.CategoryModel;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.categorybooksresponse.CategoryPayload;
+import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
 
-    private List<CategoryModel> categoryModelList;
+    private List<CategoryPayload> categoryModelList;
     private Context context;
+    private mBookCatgoryClickListner mBookCatgoryClickListner;
 
-    public CategoryAdapter(List<CategoryModel> categoryModelList, Context context) {
-        this.categoryModelList = categoryModelList;
-        this.context = context;
+    public interface mBookCatgoryClickListner{
+        void mCatBookClick(View v, int position);
+
     }
 
+    public CategoryAdapter(List<CategoryPayload> categoryModelList, Context context, CategoryAdapter.mBookCatgoryClickListner mBookCatgoryClickListner) {
+        this.categoryModelList = categoryModelList;
+        this.context = context;
+        this.mBookCatgoryClickListner = mBookCatgoryClickListner;
+    }
 
     @NonNull
     @Override
@@ -34,13 +44,34 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
 
-        final CategoryModel categoryModel = categoryModelList.get(position);
+        final CategoryPayload categoryModel = categoryModelList.get(position);
 
-        holder.image.setImageResource(categoryModel.getImage());
-        holder.titleCat.setText(categoryModel.getTitle());
-        holder.qty.setText("( "+categoryModel.getQty()+" )" +" items");
+        try {
+            Picasso.get().load(categoryModel.getStatus()).fit()
+                    .placeholder(R.drawable.loading)
+                    .error(R.drawable.no_image)
+                    .into(holder.image);
+        } catch (Exception e) {
+            e.printStackTrace();
+            holder.image.setImageResource(R.drawable.no_image);
+        }
+
+
+
+        holder.titleCat.setText(categoryModel.getName());
+
+        holder.qty.setText("( "+categoryModel.getBookCount()+" )" +" items");
+
+
+        holder.categorybookClick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mBookCatgoryClickListner.mCatBookClick(view,position);
+
+            }
+        });
     }
 
     @Override
@@ -53,6 +84,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         private ImageView image;
         private BoldTextView titleCat;
         private RegularTextView qty;
+        private CardView categorybookClick;
 
         public ViewHolder(@NonNull View view) {
             super(view);
@@ -60,6 +92,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             image = view.findViewById(R.id.imageCate);
             titleCat = view.findViewById(R.id.titleCat);
             qty = view.findViewById(R.id.qtye);
+            categorybookClick = view.findViewById(R.id.categorybookClick);
         }
     }
 }

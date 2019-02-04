@@ -8,69 +8,122 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
+import com.drivingschool.android.AppConstants
 
 import com.kinfoitsolutions.ebooks.R
+import com.kinfoitsolutions.ebooks.ui.BaseFragment
+import com.kinfoitsolutions.ebooks.ui.Utils
 import com.kinfoitsolutions.ebooks.ui.adapters.LatestAdapter
 import com.kinfoitsolutions.ebooks.ui.adapters.RecommandedRecycleAdapter
-import com.kinfoitsolutions.ebooks.ui.model.RecommandedModelClass
+import com.kinfoitsolutions.ebooks.ui.responsemodel.RecommandedModelClass
+import com.kinfoitsolutions.ebooks.ui.responsemodel.latestBooks.LatestBooksSuccess
+import com.kinfoitsolutions.ebooks.ui.restclient.RestClient
+import com.orhanobut.hawk.Hawk
+import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.fragment_latest.view.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
-class LatestFragment : Fragment(), RecommandedRecycleAdapter.mClickListener {
+class LatestFragment : BaseFragment() {
+
 
 
     private lateinit var viewOfLayout: View
 
-    private lateinit var  recommandedModelClasses: ArrayList<RecommandedModelClass>
-    private lateinit var bAdapter: LatestAdapter
-
-    private val image = arrayOf(R.drawable.blink_imges,
-                                R.drawable.me_befor_you,
-                                R.drawable.how_to_win,
-                                R.drawable.blink_imges,
-                                R.drawable.how_to_win)
-    private val title = arrayOf("Blink: The Power",
-                                "of Thinking Wi…",
-                                "Me Before You",
-                                "How to Win " ,
-                                "Me Before You")
-
-    private val rating = arrayOf("4.5", "4.0", "3.2","2.5","3.6")
-    private val author_name = arrayOf("Malcolm Gladwell",
-        "Jojo Moyes",
-        "Dale Carnegie",
-        "Malcolm Gladwell",
-        "Jojo Moyes")
+    private lateinit var latestAdapter: LatestAdapter
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun provideYourFragmentView(inflater: LayoutInflater, parent: ViewGroup?, savedInstanceState: Bundle?): View
+    {
         // Inflate the layout for this fragment
-
-
-        viewOfLayout =  inflater.inflate(R.layout.fragment_latest, container, false)
+        viewOfLayout =  inflater.inflate(R.layout.fragment_latest, parent, false)
 
         val layoutManager = GridLayoutManager(context, 3)
         viewOfLayout.latest_recyclerview.setLayoutManager(layoutManager)
         viewOfLayout.latest_recyclerview.setItemAnimator(DefaultItemAnimator())
 
-        recommandedModelClasses = ArrayList()
-
-        for (i in 0 until image.size) {
-            val beanClassForRecyclerView_contacts = RecommandedModelClass(image[i], title[i], rating[i], author_name[i])
-            recommandedModelClasses.add(beanClassForRecyclerView_contacts)
-        }
-        bAdapter = LatestAdapter(recommandedModelClasses,context)
-        viewOfLayout.latest_recyclerview.setAdapter(bAdapter)
-
+        getLatestBooks()
 
         return viewOfLayout
 
     }
 
+    private fun getLatestBooks() {
 
-    override fun mClick(v: View?, position: Int) {
+        if (isNetworkConnected(context!!)) {
+
+            val myDialog = Utils.showProgressDialog(context, "Please wait......")
+
+            val restClient = RestClient.getClient()
+
+            val stringHashMap = HashMap<String, String>()
+            stringHashMap.put("token", Hawk.get(AppConstants.TOKEN))
+
+            restClient.getLatestBooks(stringHashMap).enqueue(object : Callback<LatestBooksSuccess> {
+
+                override fun onResponse(call: Call<LatestBooksSuccess>, response: Response<LatestBooksSuccess>) {
+
+                    if (response.isSuccessful) {
+
+                        if (response.body()!!.code.equals("100")) {
 
 
+                            val latestBooksList = response.body()!!.books
+
+                            latestAdapter = LatestAdapter(latestBooksList,context)
+                            viewOfLayout.latest_recyclerview.setAdapter(latestAdapter)
+
+
+                            latestAdapter.notifyDataSetChanged()
+
+                            Utils.showSnackBar(context, "Success", activity!!.main_container)
+                            myDialog.dismiss()
+
+                        } else {
+                            Utils.showSnackBar(context, response.body()!!.msg, activity!!.main_container)
+                            myDialog.dismiss()
+
+                        }
+
+
+                    } else if (response.code() == 401) {
+                        // Handle unauthorized
+                        Utils.showSnackBar(context, "Unauthorized", activity!!.main_container)
+                        myDialog.dismiss()
+
+
+                    } else if (response.code() == 500) {
+                        // Handle unauthorized
+
+                        Utils.showSnackBar(context, "Server Error", activity!!.main_container)
+                        myDialog.dismiss()
+
+
+                    } else {
+                        //response is failed
+                        Utils.showSnackBar(context, "Failed", activity!!.main_container)
+                        myDialog.dismiss()
+
+
+                    }
+                }
+
+
+                override fun onFailure(call: Call<LatestBooksSuccess>, t: Throwable) {
+
+                    Utils.showSnackBar(context, t.toString(), activity!!.main_container)
+                    myDialog.dismiss()
+
+                }
+            })
+
+
+        } else {
+            showSnackBarFrag("Check your internet connection", activity!!.main_container)
+
+        }
     }
 
 

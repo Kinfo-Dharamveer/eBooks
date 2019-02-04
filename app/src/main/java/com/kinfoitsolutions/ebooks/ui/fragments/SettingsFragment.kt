@@ -1,7 +1,6 @@
 package com.kinfoitsolutions.ebooks.ui.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,10 +16,9 @@ import androidx.appcompat.app.AlertDialog
 import com.drivingschool.android.customviews.CustomTextView
 import com.kinfoitsolutions.ebooks.ui.BaseFragment
 import com.kinfoitsolutions.ebooks.ui.Utils
-import com.kinfoitsolutions.ebooks.ui.model.ResetPassword.ResetPasswordResponse
+import com.kinfoitsolutions.ebooks.ui.responsemodel.ResetPassword.ResetPasswordResponse
 import com.kinfoitsolutions.ebooks.ui.restclient.RestClient
 import kotlinx.android.synthetic.main.activity_dashboard.*
-import kotlinx.android.synthetic.main.activity_reset_password.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

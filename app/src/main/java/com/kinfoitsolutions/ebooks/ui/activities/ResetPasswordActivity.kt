@@ -1,21 +1,16 @@
 package com.kinfoitsolutions.ebooks.ui.activities
 
 import android.os.Bundle
-import android.view.View
 import com.kinfoitsolutions.ebooks.R
 import com.kinfoitsolutions.ebooks.ui.BaseActivity
 import com.kinfoitsolutions.ebooks.ui.Utils
-import com.kinfoitsolutions.ebooks.ui.Utils.showNoInternetSnackbar
 import com.kinfoitsolutions.ebooks.ui.Utils.showSnackBar
-import com.kinfoitsolutions.ebooks.ui.model.ResetPassword.ResetPasswordResponse
+import com.kinfoitsolutions.ebooks.ui.responsemodel.ResetPassword.ResetPasswordResponse
 import com.kinfoitsolutions.ebooks.ui.restclient.RestClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import com.kinfoitsolutions.ebooks.ui.data.MessageEvent
 import kotlinx.android.synthetic.main.activity_reset_password.*
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
 
 
 class ResetPasswordActivity : BaseActivity() {

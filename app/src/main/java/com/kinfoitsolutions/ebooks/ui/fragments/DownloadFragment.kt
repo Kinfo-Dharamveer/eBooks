@@ -7,34 +7,24 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
-import androidx.fragment.app.Fragment
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.drivingschool.android.AppConstants
-import com.google.android.material.snackbar.Snackbar
 
 import com.kinfoitsolutions.ebooks.R
 import com.kinfoitsolutions.ebooks.ui.BaseFragment
 import com.kinfoitsolutions.ebooks.ui.Utils
 import com.kinfoitsolutions.ebooks.ui.adapters.DownloadAdapter
-import com.kinfoitsolutions.ebooks.ui.adapters.LatestAdapter
-import com.kinfoitsolutions.ebooks.ui.adapters.RecommandedRecycleAdapter
 import com.kinfoitsolutions.ebooks.ui.adapters.SearchBookAdapter
-import com.kinfoitsolutions.ebooks.ui.model.DownloadModelClass
-import com.kinfoitsolutions.ebooks.ui.model.GetAllBooksResponse.GetAllBooksSuccess
-import com.kinfoitsolutions.ebooks.ui.model.RecommandedModelClass
-import com.kinfoitsolutions.ebooks.ui.model.SearchBooksResponse.SearchBookSuccess
+import com.kinfoitsolutions.ebooks.ui.responsemodel.GetAllBooksResponse.GetAllBooksSuccess
+import com.kinfoitsolutions.ebooks.ui.responsemodel.SearchBooksResponse.SearchBookSuccess
 import com.kinfoitsolutions.ebooks.ui.restclient.RestClient
 import com.orhanobut.hawk.Hawk
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.fragment_download.view.*
 import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.fragment_home.view.*
-import kotlinx.android.synthetic.main.fragment_latest.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -56,7 +46,8 @@ class DownloadFragment : BaseFragment() {
         setHasOptionsMenu(true)
     }
 
-    override fun provideYourFragmentView(inflater: LayoutInflater, parent: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun provideYourFragmentView(inflater: LayoutInflater, parent: ViewGroup?, savedInstanceState: Bundle?):
+            View {
 
         // Inflate the layout for this fragment
         viewOfLayout =  inflater.inflate(R.layout.fragment_download, parent, false)
@@ -71,7 +62,6 @@ class DownloadFragment : BaseFragment() {
 
         return viewOfLayout
     }
-
 
 
     private fun getAllBooksApi() {
@@ -182,32 +172,23 @@ class DownloadFragment : BaseFragment() {
         val searchManager = activity!!.getSystemService(Context.SEARCH_SERVICE) as SearchManager
         val searchView = searchItem.actionView as SearchView
 
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity()!!.getComponentName()))
 
-        if (searchView != null) {
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity()!!.getComponentName()))
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                // Toast.makeText(context,"onQueryTextChange"+query,Toast.LENGTH_SHORT).show()
+                searchApiCall(query)
+                return true
+            }
 
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String): Boolean {
+            override fun onQueryTextChange(newText: String): Boolean {
+                //Toast.makeText(context,"onQueryTextSubmit"+newText,Toast.LENGTH_SHORT).show()
+                searchApiCall(newText)
+                return true
+            }
+        })
 
-                    // Toast.makeText(context,"onQueryTextChange"+query,Toast.LENGTH_SHORT).show()
-                    searchApiCall(query)
-
-                    return true
-                }
-
-                override fun onQueryTextChange(newText: String): Boolean {
-                    //Toast.makeText(context,"onQueryTextSubmit"+newText,Toast.LENGTH_SHORT).show()
-
-                    searchApiCall(newText)
-
-                    //bAdapter.getFilter().filter(newText)
-                    return true
-                }
-            })
-
-            super.onCreateOptionsMenu(menu, inflater)
-
-        }
+        super.onCreateOptionsMenu(menu,inflater)
 
 
     }
@@ -239,7 +220,7 @@ class DownloadFragment : BaseFragment() {
                             val searchAllBooks = response.body()!!.books
 
                             searchAdapter = SearchBookAdapter(searchAllBooks, context, this)
-                            viewOfLayout.recommanded_recyclerview.setAdapter(searchAdapter)
+                            viewOfLayout.downloadRecyclerView.setAdapter(searchAdapter)
 
                             searchAdapter.notifyDataSetChanged()
 
