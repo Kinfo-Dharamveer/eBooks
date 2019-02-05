@@ -3,13 +3,11 @@ package com.kinfoitsolutions.ebooks.ui.fragments
 
 import android.os.Bundle
 import android.view.*
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 
 import com.kinfoitsolutions.ebooks.R
 import com.kinfoitsolutions.ebooks.ui.adapters.CategoryAdapter
-import com.kinfoitsolutions.ebooks.ui.responsemodel.CategoryModel
 import kotlinx.android.synthetic.main.fragment_category.view.*
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
@@ -18,7 +16,7 @@ import androidx.navigation.Navigation
 import com.drivingschool.android.AppConstants
 import com.kinfoitsolutions.ebooks.ui.BaseFragment
 import com.kinfoitsolutions.ebooks.ui.Utils
-import com.kinfoitsolutions.ebooks.ui.responsemodel.categorybooksresponse.BooksCatSuccess
+import com.kinfoitsolutions.ebooks.ui.responsemodel.CategoryBooksResponse.BooksCatSuccess
 import com.kinfoitsolutions.ebooks.ui.restclient.RestClient
 import com.orhanobut.hawk.Hawk
 import kotlinx.android.synthetic.main.activity_dashboard.*
@@ -33,8 +31,6 @@ class CategoryFragment : BaseFragment() {
     private lateinit var viewOfLayout: View
     private lateinit var categoryAdapter: CategoryAdapter
 
-
-
     var country = arrayOf("India", "USA", "China", "Japan", "Other")
 
 
@@ -44,18 +40,14 @@ class CategoryFragment : BaseFragment() {
         viewOfLayout =  inflater.inflate(R.layout.fragment_category, parent, false)
         setHasOptionsMenu(true)
 
-
         val layoutManager = GridLayoutManager(context, 3)
         viewOfLayout.category_recyclerview.setLayoutManager(layoutManager)
         viewOfLayout.category_recyclerview.setItemAnimator(DefaultItemAnimator())
 
-
         getBooksByCat()
 
-
-
-
         return viewOfLayout
+
     }
 
     private fun getBooksByCat() {
@@ -122,7 +114,6 @@ class CategoryFragment : BaseFragment() {
 
                     }
                 }
-
 
                 override fun onFailure(call: Call<BooksCatSuccess>, t: Throwable) {
 

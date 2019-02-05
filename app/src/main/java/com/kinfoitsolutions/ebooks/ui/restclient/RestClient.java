@@ -3,6 +3,7 @@ package com.kinfoitsolutions.ebooks.ui.restclient;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.FilterResponse.FilterBooksCatSuccess;
 import com.kinfoitsolutions.ebooks.ui.responsemodel.ForgetResponse.ForgetResponse;
 import com.kinfoitsolutions.ebooks.ui.responsemodel.GetAllBooksResponse.GetAllBooksSuccess;
 import com.kinfoitsolutions.ebooks.ui.responsemodel.Getprofile.GetProfileResponse;
@@ -13,8 +14,8 @@ import com.kinfoitsolutions.ebooks.ui.responsemodel.ResetPassword.ResetPasswordR
 import com.kinfoitsolutions.ebooks.ui.responsemodel.SearchBooksResponse.SearchBookSuccess;
 import com.kinfoitsolutions.ebooks.ui.responsemodel.UpdateProfile.UpdateProfileResponse;
 import com.kinfoitsolutions.ebooks.ui.responsemodel.VerifyOtp.VerifyOtpResponse;
-import com.kinfoitsolutions.ebooks.ui.responsemodel.authorsbooksresponse.GetAuthorsBooksSuccess;
-import com.kinfoitsolutions.ebooks.ui.responsemodel.categorybooksresponse.BooksCatSuccess;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.AuthorsBooksResponse.GetAuthorsBooksSuccess;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.CategoryBooksResponse.BooksCatSuccess;
 import com.kinfoitsolutions.ebooks.ui.responsemodel.latestBooks.LatestBooksSuccess;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -105,15 +106,18 @@ public class RestClient {
         @POST("books/search")
         Call<SearchBookSuccess> searchBook(@Body HashMap<String, String> hashMap);
 
+        @POST("books/latest_books")
+        Call<LatestBooksSuccess> getLatestBooks(@Body HashMap<String, String> hashMap);
+
+
         @POST("books/book_by_author")
         Call<GetAuthorsBooksSuccess> getBooksByAuthors(@Body HashMap<String, String> hashMap);
 
         @POST("books/book_by_category")
         Call<BooksCatSuccess> getBooksByCat(@Body HashMap<String, String> hashMap);
 
-
-        @POST("books/latest_books")
-        Call<LatestBooksSuccess> getLatestBooks(@Body HashMap<String, String> hashMap);
+        @POST("books/books_by_filter")
+        Call<FilterBooksCatSuccess> get_filter_data(@Body HashMap<String, String> hashMap);
 
 
 

@@ -68,18 +68,25 @@
               android:name="com.kinfoitsolutions.ebooks.ui.fragments.ViewAllBooksFragment"
               tools:layout="@layout/fragment_view_all"
               android:label="All Books"/>
+
     <fragment android:id="@+id/audioFragment"
               android:name="com.kinfoitsolutions.ebooks.ui.fragments.AudioFragment"
               android:label="Audio"
-              tools:layout="@layout/fragment_audio"
-    />
+              tools:layout="@layout/fragment_audio"/>
+
     <fragment android:id="@+id/allCategoryBooksFragment"
               android:name="com.kinfoitsolutions.ebooks.ui.fragments.AllCategoryBooksFragment"
               android:label="All Category Books"
               tools:layout="@layout/fragment_all_category_books"/>
+
     <fragment android:id="@+id/authorBooksFragment"
               android:name="com.kinfoitsolutions.ebooks.ui.fragments.AuthorBooksFragment"
               android:label="Author Books"
-              tools:layout="@layout/fragment_author_books"/>
+              tools:layout="@layout/fragment_author_books">
+            <argument
+                android:name="username"
+                app:argType="string"/>
+
+    </fragment>
 
 </navigation>

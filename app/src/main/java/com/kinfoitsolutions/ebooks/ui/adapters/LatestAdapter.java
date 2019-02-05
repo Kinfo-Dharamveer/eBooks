@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.kinfoitsolutions.ebooks.R;
-import com.kinfoitsolutions.ebooks.ui.responsemodel.RecommandedModelClass;
 import com.kinfoitsolutions.ebooks.ui.responsemodel.latestBooks.LatestBooksPayload;
 import com.squareup.picasso.Picasso;
 

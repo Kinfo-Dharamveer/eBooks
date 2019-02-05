@@ -18,7 +18,7 @@
                 android:layout_width="57.3dp"
                 android:layout_height="85.3dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/blink_imges"/>
+                android:src="@drawable/loading"/>
 
 
         <LinearLayout

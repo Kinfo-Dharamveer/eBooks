@@ -2,7 +2,6 @@ package com.kinfoitsolutions.ebooks.ui.fragments
 
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,13 +14,12 @@ import com.kinfoitsolutions.ebooks.R
 import com.kinfoitsolutions.ebooks.ui.BaseFragment
 import com.kinfoitsolutions.ebooks.ui.Utils
 import com.kinfoitsolutions.ebooks.ui.adapters.AuthorsAdapter
-import com.kinfoitsolutions.ebooks.ui.responsemodel.authorsbooksresponse.GetAuthorsBooksSuccess
+import com.kinfoitsolutions.ebooks.ui.responsemodel.AuthorsBooksResponse.GetAuthorsBooksSuccess
 import com.kinfoitsolutions.ebooks.ui.restclient.RestClient
 import com.orhanobut.hawk.Hawk
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.fragment_author.*
 import kotlinx.android.synthetic.main.fragment_author.view.*
-import kotlinx.android.synthetic.main.fragment_category.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -68,7 +66,10 @@ class AuthorFragment : BaseFragment() {
 
                 override fun mAuthorRowClick(c: View?, Pos: Int, id: Int?) {
 
-                    Navigation.findNavController(author_container).navigate(R.id.action_authorFragment_to_authorBooksFragment);
+                 //   var bundle = bundleOf("Dharamveer" to username.text.toString())
+
+                    Navigation.findNavController(author_container).
+                        navigate(R.id.action_authorFragment_to_authorBooksFragment)
 
                 }
 

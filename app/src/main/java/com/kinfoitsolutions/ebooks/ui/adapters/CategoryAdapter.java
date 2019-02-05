@@ -11,11 +11,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kinfoitsolutions.ebooks.R;
 import com.kinfoitsolutions.ebooks.ui.customviews.BoldTextView;
 import com.kinfoitsolutions.ebooks.ui.customviews.RegularTextView;
-import com.kinfoitsolutions.ebooks.ui.responsemodel.CategoryModel;
-import com.kinfoitsolutions.ebooks.ui.responsemodel.categorybooksresponse.CategoryPayload;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.CategoryBooksResponse.CategoryPayload;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {

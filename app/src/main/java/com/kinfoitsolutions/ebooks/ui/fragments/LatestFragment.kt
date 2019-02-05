@@ -14,8 +14,6 @@ import com.kinfoitsolutions.ebooks.R
 import com.kinfoitsolutions.ebooks.ui.BaseFragment
 import com.kinfoitsolutions.ebooks.ui.Utils
 import com.kinfoitsolutions.ebooks.ui.adapters.LatestAdapter
-import com.kinfoitsolutions.ebooks.ui.adapters.RecommandedRecycleAdapter
-import com.kinfoitsolutions.ebooks.ui.responsemodel.RecommandedModelClass
 import com.kinfoitsolutions.ebooks.ui.responsemodel.latestBooks.LatestBooksSuccess
 import com.kinfoitsolutions.ebooks.ui.restclient.RestClient
 import com.orhanobut.hawk.Hawk

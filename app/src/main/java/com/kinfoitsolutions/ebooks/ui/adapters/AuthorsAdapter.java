@@ -10,14 +10,14 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.kinfoitsolutions.ebooks.R;
 import com.kinfoitsolutions.ebooks.ui.customviews.BoldTextView;
-import com.kinfoitsolutions.ebooks.ui.responsemodel.authorsbooksresponse.Authors;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.AuthorsBooksResponse.AuthorsPayload;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class AuthorsAdapter extends RecyclerView.Adapter<AuthorsAdapter.MyViewHolder> {
 
-    private List<Authors> authorsModelList;
+    private List<AuthorsPayload> authorsModelList;
     private Context context;
     private mAuthorRowClickInterface mAuthorRowClickInterface;
 
@@ -25,7 +25,7 @@ public class AuthorsAdapter extends RecyclerView.Adapter<AuthorsAdapter.MyViewHo
         void mAuthorRowClick(View c, int Pos, Integer id);
     }
 
-    public AuthorsAdapter(List<Authors> authorsModelList, Context context, AuthorsAdapter.mAuthorRowClickInterface mAuthorRowClickInterface) {
+    public AuthorsAdapter(List<AuthorsPayload> authorsModelList, Context context, AuthorsAdapter.mAuthorRowClickInterface mAuthorRowClickInterface) {
         this.authorsModelList = authorsModelList;
         this.context = context;
         this.mAuthorRowClickInterface = mAuthorRowClickInterface;
@@ -42,7 +42,7 @@ public class AuthorsAdapter extends RecyclerView.Adapter<AuthorsAdapter.MyViewHo
     @Override
     public void onBindViewHolder(@NonNull AuthorsAdapter.MyViewHolder holder, final int position) {
 
-        final Authors authors = authorsModelList.get(position);
+        final AuthorsPayload authors = authorsModelList.get(position);
 
         holder.textAuthorName.setText(authors.getName());
 
