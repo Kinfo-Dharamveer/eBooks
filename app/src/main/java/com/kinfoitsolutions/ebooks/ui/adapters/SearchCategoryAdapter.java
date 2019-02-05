@@ -17,41 +17,40 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
+public class SearchCategoryAdapter extends RecyclerView.Adapter<SearchCategoryAdapter.MyHolder> {
 
-    private List<CategoryPayload> categoryModelList;
+
+    private List<SearchBookPayload> searchBookPayloadList;
     private Context context;
-    private mBookCatgoryClickListner mBookCatgoryClickListner;
+    private mSearchCatClickListener mSearchCatClickListener;
 
-    public interface mBookCatgoryClickListner{
-        void mCatBookClick(View v, int position);
-
+    public interface mSearchCatClickListener{
+        public void searchBookCat(View v, int position);
     }
 
 
-
-
-    public CategoryAdapter(List<CategoryPayload> categoryModelList, Context context, CategoryAdapter.mBookCatgoryClickListner mBookCatgoryClickListner) {
-        this.categoryModelList = categoryModelList;
+    public SearchCategoryAdapter(List<SearchBookPayload> searchBookPayloadList, Context context, mSearchCatClickListener mSearchCatClickListener) {
+        this.searchBookPayloadList = searchBookPayloadList;
         this.context = context;
-        this.mBookCatgoryClickListner = mBookCatgoryClickListner;
+        this.mSearchCatClickListener = mSearchCatClickListener;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public SearchCategoryAdapter.MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View mView = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_row,parent,false);
-        return new ViewHolder(mView);
+        return new MyHolder(mView);
+
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull SearchCategoryAdapter.MyHolder holder, final int position) {
 
-        final CategoryPayload categoryModel = categoryModelList.get(position);
+        final SearchBookPayload searchBookPayload = searchBookPayloadList.get(position);
 
         try {
-            Picasso.get().load(categoryModel.getStatus()).fit()
+            Picasso.get().load(searchBookPayload.getBookImage()).fit()
                     .placeholder(R.drawable.loading)
                     .error(R.drawable.no_image)
                     .into(holder.image);
@@ -60,41 +59,43 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             holder.image.setImageResource(R.drawable.no_image);
         }
 
+        holder.titleCat.setText(searchBookPayload.getCategoryName());
 
-
-        holder.titleCat.setText(categoryModel.getName());
-
-        holder.qty.setText("( "+categoryModel.getBookCount()+" )" +" items");
-
+        holder.qty.setText("( "+searchBookPayloadList.size()+" )" +" items");
 
         holder.categorybookClick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mBookCatgoryClickListner.mCatBookClick(view,position);
+                mSearchCatClickListener.searchBookCat(view,position);
 
             }
         });
+
     }
 
     @Override
     public int getItemCount() {
-        return categoryModelList.size();
+        return searchBookPayloadList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class MyHolder extends RecyclerView.ViewHolder {
 
         private ImageView image;
         private BoldTextView titleCat;
         private RegularTextView qty;
         private CardView categorybookClick;
 
-        public ViewHolder(@NonNull View view) {
+        public MyHolder(@NonNull View view) {
             super(view);
+
 
             image = view.findViewById(R.id.imageCate);
             titleCat = view.findViewById(R.id.titleCat);
             qty = view.findViewById(R.id.qtye);
             categorybookClick = view.findViewById(R.id.categorybookClick);
+
+
+
         }
     }
 }

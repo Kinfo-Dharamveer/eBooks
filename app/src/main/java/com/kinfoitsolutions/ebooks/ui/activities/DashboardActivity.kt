@@ -42,6 +42,7 @@ class DashboardActivity : BaseActivity(), NavigationView.OnNavigationItemSelecte
 
         setSupportActionBar(toolbar)
 
+
         val m = navigationView!!.getMenu()
         for (i in 0 until m.size()) {
             val mi = m.getItem(i)
@@ -62,29 +63,20 @@ class DashboardActivity : BaseActivity(), NavigationView.OnNavigationItemSelecte
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
 
-        val host = supportFragmentManager.findFragmentById(R.id.my_fragment) as NavHostFragment? ?: return
+        val host = supportFragmentManager.findFragmentById(R.id.my_fragment)
+                as NavHostFragment? ?: return
         navController = host.navController
 
         NavigationUI.setupActionBarWithNavController(this, navController, drawer_layout)
         NavigationUI.setupWithNavController(navigationView, navController)
 
-       // txtUserName.setText("")
         navigationView.setNavigationItemSelectedListener(this)
 
 
     }
 
-    private fun applyFontToMenuItem(subMenuItem: MenuItem?) {
-        val font = Typeface.createFromAsset(assets, "fonts/Montserrat-Regular.ttf")
-        val mNewTitle = SpannableString(subMenuItem!!.getTitle())
-        mNewTitle.setSpan(CustomTypefaceSpan("", font), 0, mNewTitle.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-        subMenuItem.setTitle(mNewTitle)
-
-    }
-
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
-
 
         menuItem.setChecked(true)
 
@@ -93,7 +85,6 @@ class DashboardActivity : BaseActivity(), NavigationView.OnNavigationItemSelecte
         val id = menuItem.getItemId()
 
         when (id) {
-
 
             R.id.nav_home -> navController.navigate(R.id.homeFragment)
 
@@ -104,8 +95,6 @@ class DashboardActivity : BaseActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_author -> navController.navigate(R.id.authorFragment)
 
             R.id.nav_download -> navController.navigate(R.id.downloadFragment)
-
-            // R.id.nav_favorite -> navController.navigate(R.id.favoriteFragment)
 
             R.id.nav_settings -> navController.navigate(R.id.settingsFragment)
 
@@ -127,7 +116,7 @@ class DashboardActivity : BaseActivity(), NavigationView.OnNavigationItemSelecte
             drawer_layout.closeDrawer(GravityCompat.START)
         } else {
             super.onBackPressed()
-            exit
+            exit()
         }
     }
 
@@ -196,7 +185,6 @@ class DashboardActivity : BaseActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
-
     private fun createalert() {
         val builder = AlertDialog.Builder(this@DashboardActivity)
         builder.setMessage("Are you sure want to logout?")
@@ -258,6 +246,13 @@ class DashboardActivity : BaseActivity(), NavigationView.OnNavigationItemSelecte
         return super.onCreateOptionsMenu(menu)
     }
 
+    private fun applyFontToMenuItem(subMenuItem: MenuItem?) {
+        val font = Typeface.createFromAsset(assets, "fonts/Montserrat-Regular.ttf")
+        val mNewTitle = SpannableString(subMenuItem!!.getTitle())
+        mNewTitle.setSpan(CustomTypefaceSpan("", font), 0, mNewTitle.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+        subMenuItem.setTitle(mNewTitle)
+
+    }
 
 
 

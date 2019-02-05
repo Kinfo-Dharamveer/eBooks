@@ -7,11 +7,9 @@
     <color name="black">#000</color>
     <color name="white">#fff</color>
     <color name="lightwhite">#DAD7D7</color>
-    <color name="yellow">#ffc109</color>
     <color name="blue">#3d67c4</color>
     <color name="green">#03a91a</color>
     <color name="grey">#AA414040</color>
-    <color name="darkgrey">#AA0A0A0A</color>
     <color name="txt_color">#394556</color>
 
     <color name="transperent">#00000000</color>

@@ -2,12 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
+
               android:layout_height="wrap_content">
 
 
     <RelativeLayout android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/blue">
+                    android:background="@color/colorPrimary">
 
 
         <com.drivingschool.android.customviews.CustomTextView android:layout_width="wrap_content"
@@ -21,12 +22,12 @@
         <ImageView
                 android:id="@+id/cross_dialog"
                 android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:src="@android:drawable/ic_delete"
-                   android:layout_alignParentRight="true"
-                   android:padding="10dp"
-                   android:tint="@color/white"
-                   android:layout_centerVertical="true"/>
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/ic_delete"
+                android:layout_alignParentRight="true"
+                android:padding="10dp"
+                android:tint="@color/white"
+                android:layout_centerVertical="true"/>
 
     </RelativeLayout>
 
@@ -37,24 +38,30 @@
                   android:padding="15dp"
                   android:gravity="center">
 
-
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                android:id="@+id/cat_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
         <Spinner
                 android:id="@+id/cat_spinner"
                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:background="@drawable/background_stroke"/>
-
-
-        <Button android:layout_marginTop="15dp"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:background="@drawable/background_stroke"/>
+
+
+        <Button
+                android:id="@+id/submit_dialog"
+                android:layout_marginTop="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
                 android:background="@drawable/rounded_layout_sky"
                 android:text="Submit"
-                android:backgroundTint="@color/blue"
-                android:textSize="@dimen/_14sdp"
+
+                android:backgroundTint="@color/colorPrimary"
+                android:textSize="@dimen/_12sdp"
                 android:textColor="@color/white"
         />
-
 
 
     </LinearLayout>

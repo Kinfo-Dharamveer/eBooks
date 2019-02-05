@@ -57,7 +57,7 @@
 
     </group>
 
-   <!-- <group
+    <!--<group
             android:id="@+id/g6"
             android:checkableBehavior="single">
 
@@ -70,7 +70,7 @@
     </group>-->
 
     <group
-            android:id="@+id/g7"
+            android:id="@+id/g6"
             android:checkableBehavior="single">
 
         <item
@@ -80,7 +80,7 @@
     </group>
 
     <group
-            android:id="@+id/g8"
+            android:id="@+id/g7"
             android:checkableBehavior="single">
 
         <item
@@ -90,7 +90,7 @@
     </group>
 
     <group
-            android:id="@+id/g9"
+            android:id="@+id/g8"
             android:checkableBehavior="single">
 
         <item
