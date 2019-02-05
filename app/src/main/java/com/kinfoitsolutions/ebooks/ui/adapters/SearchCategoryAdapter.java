@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kinfoitsolutions.ebooks.R;
 import com.kinfoitsolutions.ebooks.ui.customviews.BoldTextView;
 import com.kinfoitsolutions.ebooks.ui.customviews.RegularTextView;
-import com.kinfoitsolutions.ebooks.ui.responsemodel.CategoryBooksResponse.CategoryPayload;
-import com.kinfoitsolutions.ebooks.ui.responsemodel.SearchBooksResponse.SearchBookPayload;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.SearchCategoryResponse.SearchCategoryPayload;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.SearchDataResponse.SearchDataPayload;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -20,7 +20,7 @@ import java.util.List;
 public class SearchCategoryAdapter extends RecyclerView.Adapter<SearchCategoryAdapter.MyHolder> {
 
 
-    private List<SearchBookPayload> searchBookPayloadList;
+    private List<SearchCategoryPayload> searchCategoryPayloadList;
     private Context context;
     private mSearchCatClickListener mSearchCatClickListener;
 
@@ -29,8 +29,8 @@ public class SearchCategoryAdapter extends RecyclerView.Adapter<SearchCategoryAd
     }
 
 
-    public SearchCategoryAdapter(List<SearchBookPayload> searchBookPayloadList, Context context, mSearchCatClickListener mSearchCatClickListener) {
-        this.searchBookPayloadList = searchBookPayloadList;
+    public SearchCategoryAdapter(List<SearchCategoryPayload> searchBookPayloadList, Context context, mSearchCatClickListener mSearchCatClickListener) {
+        this.searchCategoryPayloadList = searchBookPayloadList;
         this.context = context;
         this.mSearchCatClickListener = mSearchCatClickListener;
     }
@@ -47,10 +47,10 @@ public class SearchCategoryAdapter extends RecyclerView.Adapter<SearchCategoryAd
     @Override
     public void onBindViewHolder(@NonNull SearchCategoryAdapter.MyHolder holder, final int position) {
 
-        final SearchBookPayload searchBookPayload = searchBookPayloadList.get(position);
+        final SearchCategoryPayload searchCategoryPayload = searchCategoryPayloadList.get(position);
 
         try {
-            Picasso.get().load(searchBookPayload.getBookImage()).fit()
+            Picasso.get().load(searchCategoryPayload.getImageUrl()).fit()
                     .placeholder(R.drawable.loading)
                     .error(R.drawable.no_image)
                     .into(holder.image);
@@ -59,9 +59,9 @@ public class SearchCategoryAdapter extends RecyclerView.Adapter<SearchCategoryAd
             holder.image.setImageResource(R.drawable.no_image);
         }
 
-        holder.titleCat.setText(searchBookPayload.getCategoryName());
+        holder.titleCat.setText(searchCategoryPayload.getName());
 
-        holder.qty.setText("( "+searchBookPayloadList.size()+" )" +" items");
+        holder.qty.setText("( "+searchCategoryPayloadList.size()+" )" +" items");
 
         holder.categorybookClick.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,7 +75,7 @@ public class SearchCategoryAdapter extends RecyclerView.Adapter<SearchCategoryAd
 
     @Override
     public int getItemCount() {
-        return searchBookPayloadList.size();
+        return searchCategoryPayloadList.size();
     }
 
     public class MyHolder extends RecyclerView.ViewHolder {

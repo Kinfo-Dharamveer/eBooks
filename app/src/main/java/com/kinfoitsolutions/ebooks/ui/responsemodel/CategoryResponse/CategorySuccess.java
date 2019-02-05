@@ -1,11 +1,11 @@
-package com.kinfoitsolutions.ebooks.ui.responsemodel.CategoryBooksResponse;
+package com.kinfoitsolutions.ebooks.ui.responsemodel.CategoryResponse;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class BooksCatSuccess {
+import java.util.List;
 
+public class CategorySuccess {
 
     @SerializedName("msg")
     @Expose
@@ -40,5 +40,4 @@ public class BooksCatSuccess {
     public void setCategories(List<CategoryPayload> categories) {
         this.categories = categories;
     }
-
 }

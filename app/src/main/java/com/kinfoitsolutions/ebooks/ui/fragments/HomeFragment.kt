@@ -26,7 +26,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 import com.kinfoitsolutions.ebooks.ui.adapters.SearchBookAdapter
-import com.kinfoitsolutions.ebooks.ui.responsemodel.SearchBooksResponse.SearchBookSuccess
+import com.kinfoitsolutions.ebooks.ui.responsemodel.AllSearchDataSuccess.AllSearchDataSuccess
+import com.kinfoitsolutions.ebooks.ui.responsemodel.SearchDataResponse.SearchDataSuccess
 
 
 class HomeFragment : BaseFragment() {
@@ -37,20 +38,12 @@ class HomeFragment : BaseFragment() {
     private lateinit var bAdapter: RecommandedRecycleAdapter
     private lateinit var searchAdapter: SearchBookAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
 
-    }
-
-    override fun provideYourFragmentView(
-        inflater: LayoutInflater,
-        parent: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun provideYourFragmentView(inflater: LayoutInflater, parent: ViewGroup?, savedInstanceState: Bundle?): View {
 
         // Inflate the layout for this fragment
         viewOfLayout = inflater.inflate(R.layout.fragment_home, parent, false)
+        setHasOptionsMenu(true)
 
 
         //recommanded recyclerview code is here
@@ -193,9 +186,6 @@ class HomeFragment : BaseFragment() {
         val searchManager = activity!!.getSystemService(Context.SEARCH_SERVICE) as SearchManager
         val searchView = searchItem.actionView as SearchView
 
-        // MenuItemCompat.setShowAsAction(searchItem, MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW or MenuItemCompat.SHOW_AS_ACTION_IF_ROOM)
-        //  MenuItemCompat.setActionView(searchItem, searchView)
-
 
         if (searchView != null) {
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity()!!.getComponentName()))
@@ -237,20 +227,22 @@ class HomeFragment : BaseFragment() {
             val stringHashMap = HashMap<String, String>()
             stringHashMap.put("token", Hawk.get(AppConstants.TOKEN))
             stringHashMap.put("term", searchText)
+            stringHashMap.put("type", "1")
 
-            restClient.searchBook(stringHashMap).enqueue(object : Callback<SearchBookSuccess>, SearchBookAdapter.mSearchClickListener {
+
+            restClient.searchAllData(stringHashMap).enqueue(object : Callback<AllSearchDataSuccess>, SearchBookAdapter.mSearchClickListener {
 
                 override fun mSearchClick(v: View?, position: Int) {
                     Navigation.findNavController(homeFragContainer).navigate(R.id.action_homeFragment_to_bookReadingFragment);
                 }
 
-                override fun onResponse(call: Call<SearchBookSuccess>, response: Response<SearchBookSuccess>) {
+                override fun onResponse(call: Call<AllSearchDataSuccess>, response: Response<AllSearchDataSuccess>) {
 
                     if (response.isSuccessful) {
 
                         if (response.body()!!.code.equals("100")) {
 
-                            val searchAllBooks = response.body()!!.books
+                            val searchAllBooks = response.body()!!.data
 
                             searchAdapter = SearchBookAdapter(searchAllBooks, context, this)
                             viewOfLayout.recommanded_recyclerview.setAdapter(searchAdapter)
@@ -290,7 +282,7 @@ class HomeFragment : BaseFragment() {
                 }
 
 
-                override fun onFailure(call: Call<SearchBookSuccess>, t: Throwable) {
+                override fun onFailure(call: Call<AllSearchDataSuccess>, t: Throwable) {
 
                     Utils.showSnackBar(context, t.toString(), activity!!.main_container)
                     myDialog.dismiss()
@@ -305,8 +297,6 @@ class HomeFragment : BaseFragment() {
         }
 
     }
-
-
 
 
 }

@@ -10,42 +10,41 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.drivingschool.android.customviews.CustomTextView;
 import com.kinfoitsolutions.ebooks.R;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.AllSearchDataSuccess.AllSearchDataPayload;
 import com.kinfoitsolutions.ebooks.ui.responsemodel.GetAllBooksResponse.BookPayload;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHolder> {
+public class DownloadSearchAdapter extends RecyclerView.Adapter<DownloadSearchAdapter.MyViewHolder> {
 
-    private List<BookPayload> downloadModelClassList;
+
+    private List<AllSearchDataPayload> allSearchDataPayloadList;
     private Context context;
-    private mDownloadListener mDownloadListener;
+    private mDownloadSearchListener mDownloadListener;
 
-    public interface mDownloadListener{
-         void mPdfDownload(View v, int position,String pdfLink);
+    public interface mDownloadSearchListener{
+         void mPdfSearchDownload(View v, int position, String pdfLink);
     }
 
-
-    public DownloadAdapter(List<BookPayload> downloadModelClassList, Context context,mDownloadListener downloadListener) {
-        this.downloadModelClassList = downloadModelClassList;
+    public DownloadSearchAdapter(List<AllSearchDataPayload> allSearchDataPayloadList, Context context, mDownloadSearchListener mDownloadListener) {
+        this.allSearchDataPayloadList = allSearchDataPayloadList;
         this.context = context;
-        this.mDownloadListener = downloadListener;
+        this.mDownloadListener = mDownloadListener;
     }
-
-
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-       View mView = LayoutInflater.from(parent.getContext()).inflate(R.layout.download_row,parent,false);
+    public DownloadSearchAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View mView = LayoutInflater.from(parent.getContext()).inflate(R.layout.download_row,parent,false);
 
-        return new ViewHolder(mView);
+        return new MyViewHolder(mView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull DownloadSearchAdapter.MyViewHolder holder, final int position) {
 
-        final BookPayload lists = downloadModelClassList.get(position);
+        final AllSearchDataPayload lists = allSearchDataPayloadList.get(position);
 
         holder.title.setText(lists.getName());
         holder.author_name.setText(lists.getAuthorName());
@@ -61,10 +60,11 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHo
             holder.imageView.setImageResource(R.drawable.no_image);
         }
 
+
         holder.btnDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDownloadListener.mPdfDownload(view,position,lists.getBookFile());
+                mDownloadListener.mPdfSearchDownload(view,position,lists.getBookFile());
             }
         });
 
@@ -72,19 +72,17 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return downloadModelClassList.size();
+        return allSearchDataPayloadList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView title,author_name;
         ImageView imageView;
         CustomTextView btnDownload;
 
 
-
-        public ViewHolder(@NonNull View view) {
-
+        public MyViewHolder(@NonNull View view) {
             super(view);
 
             imageView = view.findViewById(R.id.image_down);

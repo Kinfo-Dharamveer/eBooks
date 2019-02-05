@@ -11,7 +11,8 @@
                     android:background="@color/colorPrimary">
 
 
-        <com.drivingschool.android.customviews.CustomTextView android:layout_width="wrap_content"
+        <com.drivingschool.android.customviews.CustomTextView
+                android:id="@+id/searchDialogTitle" android:layout_width="wrap_content"
                                                               android:layout_height="wrap_content"
                                                               android:text="Search book by Category"
                                                               android:textColor="@color/white"
@@ -57,7 +58,6 @@
                 android:layout_height="30dp"
                 android:background="@drawable/rounded_layout_sky"
                 android:text="Submit"
-
                 android:backgroundTint="@color/colorPrimary"
                 android:textSize="@dimen/_12sdp"
                 android:textColor="@color/white"

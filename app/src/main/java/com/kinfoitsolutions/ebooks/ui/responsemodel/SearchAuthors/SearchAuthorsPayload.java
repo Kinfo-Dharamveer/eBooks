@@ -1,9 +1,11 @@
-package com.kinfoitsolutions.ebooks.ui.responsemodel.CategoryBooksResponse;
+package com.kinfoitsolutions.ebooks.ui.responsemodel.SearchAuthors;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class CategoryPayload {
+
+public class SearchAuthorsPayload {
+
 
 
     @SerializedName("id")
@@ -12,9 +14,12 @@ public class CategoryPayload {
     @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("description")
+    @SerializedName("image_url")
     @Expose
-    private String description;
+    private String imageUrl;
+    @SerializedName("about")
+    @Expose
+    private String about;
     @SerializedName("status")
     @Expose
     private Integer status;
@@ -50,12 +55,20 @@ public class CategoryPayload {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
     }
 
     public Integer getStatus() {
@@ -105,5 +118,4 @@ public class CategoryPayload {
     public void setBookCount(Integer bookCount) {
         this.bookCount = bookCount;
     }
-
 }

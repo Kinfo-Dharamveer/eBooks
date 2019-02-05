@@ -116,7 +116,7 @@ class DashboardActivity : BaseActivity(), NavigationView.OnNavigationItemSelecte
             drawer_layout.closeDrawer(GravityCompat.START)
         } else {
             super.onBackPressed()
-            exit()
+            //exit()
         }
     }
 
@@ -217,7 +217,6 @@ class DashboardActivity : BaseActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onSupportNavigateUp(): Boolean {
         return NavigationUI.navigateUp(Navigation.findNavController(this, R.id.my_fragment), drawer_layout)
-
     }
 
     private fun exit() {

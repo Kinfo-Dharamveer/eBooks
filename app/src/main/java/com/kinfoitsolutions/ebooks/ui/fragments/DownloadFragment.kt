@@ -4,22 +4,30 @@ package com.kinfoitsolutions.ebooks.ui.fragments
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.*
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
+import android.widget.Button
+import android.widget.ImageView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import com.drivingschool.android.AppConstants
+import com.drivingschool.android.customviews.CustomTextView
 
 import com.kinfoitsolutions.ebooks.R
 import com.kinfoitsolutions.ebooks.ui.BaseFragment
 import com.kinfoitsolutions.ebooks.ui.Utils
 import com.kinfoitsolutions.ebooks.ui.adapters.DownloadAdapter
-import com.kinfoitsolutions.ebooks.ui.adapters.SearchBookAdapter
+import com.kinfoitsolutions.ebooks.ui.adapters.DownloadSearchAdapter
+import com.kinfoitsolutions.ebooks.ui.responsemodel.AllSearchDataSuccess.AllSearchDataSuccess
 import com.kinfoitsolutions.ebooks.ui.responsemodel.GetAllBooksResponse.GetAllBooksSuccess
-import com.kinfoitsolutions.ebooks.ui.responsemodel.SearchBooksResponse.SearchBookSuccess
 import com.kinfoitsolutions.ebooks.ui.restclient.RestClient
 import com.orhanobut.hawk.Hawk
 import kotlinx.android.synthetic.main.activity_dashboard.*
@@ -38,19 +46,20 @@ class DownloadFragment : BaseFragment() {
     private lateinit var viewOfLayout: View
 
     private lateinit var bAdapter: DownloadAdapter
-    private lateinit var searchAdapter: SearchBookAdapter
+    private lateinit var downloadSearchAdapter: DownloadSearchAdapter
+
+    private lateinit var bookDownloadNameArray: ArrayList<String>
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
-    override fun provideYourFragmentView(inflater: LayoutInflater, parent: ViewGroup?, savedInstanceState: Bundle?):
-            View {
+    override fun provideYourFragmentView(inflater: LayoutInflater, parent: ViewGroup?, savedInstanceState: Bundle?): View {
 
         // Inflate the layout for this fragment
         viewOfLayout =  inflater.inflate(R.layout.fragment_download, parent, false)
+        setHasOptionsMenu(true)
+        getActivity()!!.onBackPressed()
+
+        bookDownloadNameArray = ArrayList<String>()
+
 
         val layoutManager = GridLayoutManager(context,3)
         viewOfLayout.downloadRecyclerView.setLayoutManager(layoutManager)
@@ -97,6 +106,15 @@ class DownloadFragment : BaseFragment() {
 
 
                             val allBooksDownload = response.body()!!.books
+
+                            var bookName: String
+
+                            for (i in 0 until response.body()!!.books.size) {
+                                bookName = response.body()!!.books.get(i).name
+                                bookDownloadNameArray.add(bookName)
+
+                            }
+
 
                             bAdapter = DownloadAdapter(allBooksDownload,context,this)
                             viewOfLayout.downloadRecyclerView.setAdapter(bAdapter)
@@ -154,46 +172,63 @@ class DownloadFragment : BaseFragment() {
 
     }
 
-
     override fun onPrepareOptionsMenu(menu: Menu) {
-        menu.findItem(R.id.action_category).setVisible(false)
+        menu.findItem(R.id.action_search).setVisible(false)
         menu.findItem(R.id.action_edit).setVisible(false)
         menu.findItem(R.id.action_filter).setVisible(false)
-        menu.findItem(R.id.action_search).setVisible(true)
+        menu.findItem(R.id.action_category).setVisible(true)
         super.onPrepareOptionsMenu(menu)
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when (item.getItemId()) {
+
+            R.id.action_category -> {
+
+                val dialogBuilder = AlertDialog.Builder(context!!)
+                // ...Irrelevant code for customizing the buttons and title
+                val inflater = this.layoutInflater
+                val dialogView = inflater.inflate(R.layout.search_dialog, null)
+                dialogBuilder.setView(dialogView)
+
+                val searchDialogTitle = dialogView.findViewById(R.id.searchDialogTitle) as CustomTextView
+                val cross_dialog = dialogView.findViewById(R.id.cross_dialog) as ImageView
+                val submit_dialog = dialogView.findViewById(R.id.submit_dialog) as Button
+
+                searchDialogTitle.setText("Search Book")
+
+                val adapter = ArrayAdapter<String>(activity, android.R.layout.select_dialog_item, bookDownloadNameArray)
+                //Getting the instance of AutoCompleteTextView
+                val actv = dialogView.findViewById(R.id.cat_search) as AutoCompleteTextView
+                actv.threshold = 1//will start working from first character
+                actv.setAdapter<ArrayAdapter<String>>(adapter)//setting the adapter data into the AutoCompleteTextView
+                actv.setTextColor(Color.RED)
+                Log.e("texttttttttt", "" + actv.text.toString());
+
+                val alertDialog = dialogBuilder.create()
+                alertDialog.show()
+
+                submit_dialog.setOnClickListener {
+                    searchDownloadBook(actv.text.toString())
+                    alertDialog.dismiss()
+
+                }
 
 
-        val searchItem = menu.findItem(R.id.action_search)
+                cross_dialog.setOnClickListener {
+                    alertDialog.dismiss()
+                }
 
-        val searchManager = activity!!.getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        val searchView = searchItem.actionView as SearchView
-
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity()!!.getComponentName()))
-
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean {
-                // Toast.makeText(context,"onQueryTextChange"+query,Toast.LENGTH_SHORT).show()
-                searchApiCall(query)
-                return true
+                return super.onOptionsItemSelected(item)
             }
-
-            override fun onQueryTextChange(newText: String): Boolean {
-                //Toast.makeText(context,"onQueryTextSubmit"+newText,Toast.LENGTH_SHORT).show()
-                searchApiCall(newText)
-                return true
-            }
-        })
-
-        super.onCreateOptionsMenu(menu,inflater)
-
+            else -> return super.onOptionsItemSelected(item)
+        }
 
     }
 
-    private fun searchApiCall(searchText: String) {
+    private fun searchDownloadBook(searchText: String) {
 
         if (isNetworkConnected(context!!)) {
 
@@ -204,25 +239,32 @@ class DownloadFragment : BaseFragment() {
             val stringHashMap = HashMap<String, String>()
             stringHashMap.put("token", Hawk.get(AppConstants.TOKEN))
             stringHashMap.put("term", searchText)
+            stringHashMap.put("type", "1")
 
-            restClient.searchBook(stringHashMap).enqueue(object : Callback<SearchBookSuccess>, SearchBookAdapter.mSearchClickListener {
+            restClient.searchAllData(stringHashMap).enqueue(object : Callback<AllSearchDataSuccess>,
+                DownloadSearchAdapter.mDownloadSearchListener {
 
-                override fun mSearchClick(v: View?, position: Int) {
-                    Navigation.findNavController(homeFragContainer).navigate(R.id.action_homeFragment_to_bookReadingFragment);
+
+                override fun mPdfSearchDownload(v: View?, position: Int, pdfLink: String?) {
+                    showSnackBarFrag(pdfLink + position, activity!!.main_container)
+
+                    startActivity( Intent(Intent.ACTION_VIEW, Uri.parse(pdfLink)))
+
                 }
 
-                override fun onResponse(call: Call<SearchBookSuccess>, response: Response<SearchBookSuccess>) {
+
+                override fun onResponse(call: Call<AllSearchDataSuccess>, response: Response<AllSearchDataSuccess>) {
 
                     if (response.isSuccessful) {
 
                         if (response.body()!!.code.equals("100")) {
 
-                            val searchAllBooks = response.body()!!.books
+                            val searchAllBooks = response.body()!!.data
 
-                            searchAdapter = SearchBookAdapter(searchAllBooks, context, this)
-                            viewOfLayout.downloadRecyclerView.setAdapter(searchAdapter)
+                            downloadSearchAdapter = DownloadSearchAdapter(searchAllBooks, context, this)
+                            viewOfLayout.downloadRecyclerView.setAdapter(downloadSearchAdapter)
 
-                            searchAdapter.notifyDataSetChanged()
+                            downloadSearchAdapter.notifyDataSetChanged()
 
                             Utils.showSnackBar(context, "Success", activity!!.main_container)
                             myDialog.dismiss()
@@ -257,7 +299,7 @@ class DownloadFragment : BaseFragment() {
                 }
 
 
-                override fun onFailure(call: Call<SearchBookSuccess>, t: Throwable) {
+                override fun onFailure(call: Call<AllSearchDataSuccess>, t: Throwable) {
 
                     Utils.showSnackBar(context, t.toString(), activity!!.main_container)
                     myDialog.dismiss()

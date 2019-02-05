@@ -18,7 +18,7 @@ import androidx.navigation.Navigation
 import com.drivingschool.android.AppConstants
 import com.kinfoitsolutions.ebooks.ui.BaseFragment
 import com.kinfoitsolutions.ebooks.ui.Utils
-import com.kinfoitsolutions.ebooks.ui.responsemodel.CategoryBooksResponse.BooksCatSuccess
+import com.kinfoitsolutions.ebooks.ui.responsemodel.SearchCategoryResponse.SearchCatSuccess
 import com.kinfoitsolutions.ebooks.ui.restclient.RestClient
 import com.orhanobut.hawk.Hawk
 import kotlinx.android.synthetic.main.activity_dashboard.*
@@ -28,11 +28,9 @@ import retrofit2.Callback
 import retrofit2.Response
 import android.widget.AutoCompleteTextView
 import android.widget.ArrayAdapter
-import com.kinfoitsolutions.ebooks.ui.adapters.SearchBookAdapter
+import com.drivingschool.android.customviews.CustomTextView
 import com.kinfoitsolutions.ebooks.ui.adapters.SearchCategoryAdapter
-import com.kinfoitsolutions.ebooks.ui.responsemodel.SearchBooksResponse.SearchBookSuccess
-import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.fragment_home.view.*
+import com.kinfoitsolutions.ebooks.ui.responsemodel.CategoryResponse.CategorySuccess
 
 
 class CategoryFragment : BaseFragment() {
@@ -41,19 +39,15 @@ class CategoryFragment : BaseFragment() {
     private lateinit var categoryAdapter: CategoryAdapter
     private lateinit var searchCategoryAdapter: SearchCategoryAdapter
 
-    // private lateinit var cateName: String
+    private lateinit var cateNameArray: ArrayList<String>
 
-    var cateName = arrayOf<String>()
 
-    override fun provideYourFragmentView(
-        inflater: LayoutInflater,
-        parent: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun provideYourFragmentView(inflater: LayoutInflater, parent: ViewGroup?, savedInstanceState: Bundle?): View {
         // Inflate the layout for this fragment
         viewOfLayout = inflater.inflate(R.layout.fragment_category, parent, false)
         setHasOptionsMenu(true)
 
+        cateNameArray = ArrayList<String>()
 
         val layoutManager = GridLayoutManager(context, 3)
         viewOfLayout.category_recyclerview.setLayoutManager(layoutManager)
@@ -76,7 +70,7 @@ class CategoryFragment : BaseFragment() {
             val stringHashMap = HashMap<String, String>()
             stringHashMap.put("token", Hawk.get(AppConstants.TOKEN))
 
-            restClient.getBooksByCat(stringHashMap).enqueue(object : Callback<BooksCatSuccess>,
+            restClient.getBooksByCat(stringHashMap).enqueue(object : Callback<CategorySuccess>,
                 CategoryAdapter.mBookCatgoryClickListner {
 
                 override fun mCatBookClick(v: View?, position: Int) {
@@ -86,7 +80,7 @@ class CategoryFragment : BaseFragment() {
 
                 }
 
-                override fun onResponse(call: Call<BooksCatSuccess>, response: Response<BooksCatSuccess>) {
+                override fun onResponse(call: Call<CategorySuccess>, response: Response<CategorySuccess>) {
 
                     if (response.isSuccessful) {
 
@@ -94,8 +88,11 @@ class CategoryFragment : BaseFragment() {
 
                             val allBooksCat = response.body()!!.categories
 
+                            var cateName: String
+
                             for (i in 0 until response.body()!!.categories.size) {
-                                cateName = arrayOf(response.body()!!.categories.get(i).name)
+                                cateName = response.body()!!.categories.get(i).name
+                                cateNameArray.add(cateName)
                             }
 
                             categoryAdapter = CategoryAdapter(allBooksCat, context, this)
@@ -135,7 +132,7 @@ class CategoryFragment : BaseFragment() {
                     }
                 }
 
-                override fun onFailure(call: Call<BooksCatSuccess>, t: Throwable) {
+                override fun onFailure(call: Call<CategorySuccess>, t: Throwable) {
 
                     Utils.showSnackBar(context, t.toString(), activity!!.main_container)
                     myDialog.dismiss()
@@ -170,20 +167,17 @@ class CategoryFragment : BaseFragment() {
                 val dialogBuilder = AlertDialog.Builder(context!!)
                 // ...Irrelevant code for customizing the buttons and title
                 val inflater = this.layoutInflater
-                val dialogView = inflater.inflate(R.layout.cat_search_dialog, null)
+                val dialogView = inflater.inflate(R.layout.search_dialog, null)
                 dialogBuilder.setView(dialogView)
 
-                // val spinner = dialogView.findViewById(R.id.cat_spinner) as Spinner
+                val searchDialogTitle = dialogView.findViewById(R.id.searchDialogTitle) as CustomTextView
                 val cross_dialog = dialogView.findViewById(R.id.cross_dialog) as ImageView
                 val submit_dialog = dialogView.findViewById(R.id.submit_dialog) as Button
 
-                /*   val aa = ArrayAdapter(context, android.R.layout.simple_spinner_item, cateName)
-                   aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                   //Setting the ArrayAdapter data on the Spinner
-                   spinner.setAdapter(aa)*/
+                searchDialogTitle.setText("Search Category by Name ")
 
 
-                val adapter = ArrayAdapter<String>(activity, android.R.layout.select_dialog_item, cateName)
+                val adapter = ArrayAdapter<String>(activity, android.R.layout.select_dialog_item, cateNameArray)
                 //Getting the instance of AutoCompleteTextView
                 val actv = dialogView.findViewById(R.id.cat_search) as AutoCompleteTextView
                 actv.threshold = 1//will start working from first character
@@ -195,7 +189,7 @@ class CategoryFragment : BaseFragment() {
                 alertDialog.show()
 
                 submit_dialog.setOnClickListener {
-                    searchApiCall(actv.text.toString())
+                   searchCategory(actv.text.toString())
                     alertDialog.dismiss()
 
                 }
@@ -212,7 +206,8 @@ class CategoryFragment : BaseFragment() {
 
     }
 
-    private fun searchApiCall(searchText: String) {
+
+    private fun searchCategory(searchText: String) {
 
         if (isNetworkConnected(context!!)) {
 
@@ -223,9 +218,10 @@ class CategoryFragment : BaseFragment() {
             val stringHashMap = java.util.HashMap<String, String>()
             stringHashMap.put("token", Hawk.get(AppConstants.TOKEN))
             stringHashMap.put("term", searchText)
+            stringHashMap.put("type", "2")
 
-            restClient.searchBook(stringHashMap)
-                .enqueue(object : Callback<SearchBookSuccess>, SearchBookAdapter.mSearchClickListener,
+            restClient.searchCategory(stringHashMap)
+                .enqueue(object : Callback<SearchCatSuccess>,
                     SearchCategoryAdapter.mSearchCatClickListener {
                     override fun searchBookCat(v: View?, position: Int) {
 
@@ -234,19 +230,15 @@ class CategoryFragment : BaseFragment() {
 
                     }
 
-                    override fun mSearchClick(v: View?, position: Int) {
-                        Navigation.findNavController(homeFragContainer)
-                            .navigate(R.id.action_homeFragment_to_bookReadingFragment);
-                    }
 
-                    override fun onResponse(call: Call<SearchBookSuccess>, response: Response<SearchBookSuccess>) {
+                    override fun onResponse(call: Call<SearchCatSuccess>, response: Response<SearchCatSuccess>) {
 
                         if (response.isSuccessful) {
 
                             if (response.body()!!.code.equals("100")) {
 
 
-                                val searchCategory = response.body()!!.books
+                                val searchCategory = response.body()!!.data
 
                                 searchCategoryAdapter = SearchCategoryAdapter(searchCategory, context, this)
                                 viewOfLayout.category_recyclerview.setAdapter(searchCategoryAdapter)
@@ -286,7 +278,7 @@ class CategoryFragment : BaseFragment() {
                     }
 
 
-                    override fun onFailure(call: Call<SearchBookSuccess>, t: Throwable) {
+                    override fun onFailure(call: Call<SearchCatSuccess>, t: Throwable) {
 
                         Utils.showSnackBar(context, t.toString(), activity!!.main_container)
                         myDialog.dismiss()
@@ -301,6 +293,7 @@ class CategoryFragment : BaseFragment() {
         }
 
     }
+
 
 
 }

@@ -3,6 +3,8 @@ package com.kinfoitsolutions.ebooks.ui.restclient;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.AllSearchDataSuccess.AllSearchDataSuccess;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.CategoryResponse.CategorySuccess;
 import com.kinfoitsolutions.ebooks.ui.responsemodel.FilterResponse.FilterBooksCatSuccess;
 import com.kinfoitsolutions.ebooks.ui.responsemodel.ForgetResponse.ForgetResponse;
 import com.kinfoitsolutions.ebooks.ui.responsemodel.GetAllBooksResponse.GetAllBooksSuccess;
@@ -11,11 +13,11 @@ import com.kinfoitsolutions.ebooks.ui.responsemodel.LoginResponse;
 import com.kinfoitsolutions.ebooks.ui.responsemodel.Logout.LogoutResponse;
 import com.kinfoitsolutions.ebooks.ui.responsemodel.RegisterResponse.RegisterResponse;
 import com.kinfoitsolutions.ebooks.ui.responsemodel.ResetPassword.ResetPasswordResponse;
-import com.kinfoitsolutions.ebooks.ui.responsemodel.SearchBooksResponse.SearchBookSuccess;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.SearchAuthors.SearchAuthorsSuccess;
 import com.kinfoitsolutions.ebooks.ui.responsemodel.UpdateProfile.UpdateProfileResponse;
 import com.kinfoitsolutions.ebooks.ui.responsemodel.VerifyOtp.VerifyOtpResponse;
 import com.kinfoitsolutions.ebooks.ui.responsemodel.AuthorsBooksResponse.GetAuthorsBooksSuccess;
-import com.kinfoitsolutions.ebooks.ui.responsemodel.CategoryBooksResponse.BooksCatSuccess;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.SearchCategoryResponse.SearchCatSuccess;
 import com.kinfoitsolutions.ebooks.ui.responsemodel.latestBooks.LatestBooksSuccess;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -103,8 +105,14 @@ public class RestClient {
         Call<GetAllBooksSuccess> get_books(@Body HashMap<String, String> hashMap);
 
 
+        //Search All Data Api
         @POST("books/search")
-        Call<SearchBookSuccess> searchBook(@Body HashMap<String, String> hashMap);
+        Call<AllSearchDataSuccess> searchAllData(@Body HashMap<String, String> hashMap);
+
+
+        //Search Author Api
+        @POST("books/search")
+        Call<SearchAuthorsSuccess> searchAuthor(@Body HashMap<String, String> hashMap);
 
         @POST("books/latest_books")
         Call<LatestBooksSuccess> getLatestBooks(@Body HashMap<String, String> hashMap);
@@ -114,10 +122,16 @@ public class RestClient {
         Call<GetAuthorsBooksSuccess> getBooksByAuthors(@Body HashMap<String, String> hashMap);
 
         @POST("books/book_by_category")
-        Call<BooksCatSuccess> getBooksByCat(@Body HashMap<String, String> hashMap);
+        Call<CategorySuccess> getBooksByCat(@Body HashMap<String, String> hashMap);
 
+        //Search Category Api
+        @POST("books/search")
+        Call<SearchCatSuccess> searchCategory(@Body HashMap<String, String> hashMap);
+
+
+        //Get Authors and Category Api
         @POST("books/books_by_filter")
-        Call<FilterBooksCatSuccess> get_filter_data(@Body HashMap<String, String> hashMap);
+        Call<FilterBooksCatSuccess> booksByFilter(@Body HashMap<String, String> hashMap);
 
 
 

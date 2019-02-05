@@ -11,15 +11,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kinfoitsolutions.ebooks.R;
 import com.kinfoitsolutions.ebooks.ui.customviews.BoldTextView;
 import com.kinfoitsolutions.ebooks.ui.customviews.RegularTextView;
-import com.kinfoitsolutions.ebooks.ui.responsemodel.CategoryBooksResponse.CategoryPayload;
-import com.kinfoitsolutions.ebooks.ui.responsemodel.SearchBooksResponse.SearchBookPayload;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.CategoryResponse.CategoryPayload;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.SearchCategoryResponse.SearchCategoryPayload;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
 
-    private List<CategoryPayload> categoryModelList;
+    private List<CategoryPayload> categoryPayloadList;
     private Context context;
     private mBookCatgoryClickListner mBookCatgoryClickListner;
 
@@ -32,7 +32,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
 
     public CategoryAdapter(List<CategoryPayload> categoryModelList, Context context, CategoryAdapter.mBookCatgoryClickListner mBookCatgoryClickListner) {
-        this.categoryModelList = categoryModelList;
+        this.categoryPayloadList = categoryModelList;
         this.context = context;
         this.mBookCatgoryClickListner = mBookCatgoryClickListner;
     }
@@ -48,10 +48,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
 
-        final CategoryPayload categoryModel = categoryModelList.get(position);
+        final CategoryPayload categoryModel = categoryPayloadList.get(position);
 
         try {
-            Picasso.get().load(categoryModel.getStatus()).fit()
+            Picasso.get().load(categoryModel.getImageUrl()).fit()
                     .placeholder(R.drawable.loading)
                     .error(R.drawable.no_image)
                     .into(holder.image);
@@ -78,7 +78,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return categoryModelList.size();
+        return categoryPayloadList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
