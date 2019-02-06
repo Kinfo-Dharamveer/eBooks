@@ -15,8 +15,10 @@
         <action android:id="@+id/action_homeFragment_to_downloadFragment" app:destination="@id/downloadFragment"/>
         <action android:id="@+id/action_homeFragment_to_favoriteFragment" app:destination="@id/favoriteFragment"/>
         <action android:id="@+id/action_homeFragment_to_profileFragment" app:destination="@id/profileFragment"/>
-        <action android:id="@+id/action_homeFragment_to_bookReadingFragment" app:destination="@id/bookReadingFragment"/>
         <action android:id="@+id/action_homeFragment_to_viewAllFragment" app:destination="@id/viewAllFragment"/>
+        <action android:id="@+id/action_homeFragment_to_webViewFragment" app:destination="@id/webViewFragment"/>
+        <action android:id="@+id/action_homeFragment_to_viewAllTop50Fragment"
+                app:destination="@id/viewAllTop50Fragment"/>
     </fragment>
 
     <fragment android:id="@+id/categoryFragment"
@@ -65,9 +67,11 @@
         <action android:id="@+id/action_bookReadingFragment_to_audioFragment" app:destination="@id/audioFragment"/>
     </fragment>
     <fragment android:id="@+id/viewAllFragment"
-              android:name="com.kinfoitsolutions.ebooks.ui.fragments.ViewAllBooksFragment"
+              android:name="com.kinfoitsolutions.ebooks.ui.fragments.ViewAllRecommendBooksFragment"
               tools:layout="@layout/fragment_view_all"
-              android:label="All Books"/>
+              android:label="All Books">
+        <action android:id="@+id/action_viewAllFragment_to_webViewFragment" app:destination="@id/webViewFragment"/>
+    </fragment>
 
     <fragment android:id="@+id/audioFragment"
               android:name="com.kinfoitsolutions.ebooks.ui.fragments.AudioFragment"
@@ -87,6 +91,15 @@
                 android:name="username"
                 app:argType="String"/>-->
 
+    </fragment>
+    <fragment android:id="@+id/webViewFragment"
+              android:name="com.kinfoitsolutions.ebooks.ui.fragments.WebViewFragment"
+              android:label="Book Reading"
+              tools:layout="@layout/fragment_web_view"/>
+    <fragment android:id="@+id/viewAllTop50Fragment"
+              android:name="com.kinfoitsolutions.ebooks.ui.fragments.ViewAllTop50Fragment"
+              android:label="Top 50 Books" tools:layout="@layout/fragment_view_all_top50">
+        <action android:id="@+id/action_viewAllTop50Fragment_to_webViewFragment" app:destination="@id/webViewFragment"/>
     </fragment>
 
 </navigation>

@@ -84,7 +84,6 @@ class DownloadFragment : BaseFragment() {
 
             val stringHashMap = HashMap<String, String>()
             stringHashMap.put("token", Hawk.get(AppConstants.TOKEN))
-            stringHashMap.put("orderby", "0")
 
             restClient.get_books(stringHashMap).enqueue(object : Callback<GetAllBooksSuccess>,
                 DownloadAdapter.mDownloadListener {
@@ -105,12 +104,12 @@ class DownloadFragment : BaseFragment() {
                         if (response.body()!!.code.equals("100")) {
 
 
-                            val allBooksDownload = response.body()!!.books
+                            val allBooksDownload = response.body()!!.recomended
 
                             var bookName: String
 
-                            for (i in 0 until response.body()!!.books.size) {
-                                bookName = response.body()!!.books.get(i).name
+                            for (i in 0 until response.body()!!.recomended.size) {
+                                bookName = response.body()!!.recomended.get(i).name
                                 bookDownloadNameArray.add(bookName)
 
                             }

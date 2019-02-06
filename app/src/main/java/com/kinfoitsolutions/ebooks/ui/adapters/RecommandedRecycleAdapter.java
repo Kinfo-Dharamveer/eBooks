@@ -8,67 +8,26 @@ import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.kinfoitsolutions.ebooks.R;
-import com.kinfoitsolutions.ebooks.ui.responsemodel.GetAllBooksResponse.BookPayload;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.GetAllBooksResponse.RecomendedBooksPayload;
 import com.squareup.picasso.Picasso;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RecommandedRecycleAdapter extends
-        RecyclerView.Adapter<RecommandedRecycleAdapter.MyViewHolder> implements Filterable {
+        RecyclerView.Adapter<RecommandedRecycleAdapter.MyViewHolder> {
 
-    private List<BookPayload> booksList;
+    private List<RecomendedBooksPayload> booksList;
     private Context context;
     private mClickListener mClickListener;
-    private List<BookPayload> bookListFiltered;
 
-    @Override
-    public Filter getFilter() {
-        return new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence charSequence) {
-
-                String charString = charSequence.toString();
-                if (charString.isEmpty()) {
-                    bookListFiltered = booksList;
-                }
-                else {
-                    List<BookPayload> filteredList = new ArrayList<>();
-
-                    for (BookPayload row : booksList) {
-
-                        // name match condition. this might differ depending on your requirement
-                        // here we are looking for name or phone number match
-                        if (row.getName().toLowerCase().contains(charString.toLowerCase()) || row.getAuthorName().contains(charSequence)) {
-                            filteredList.add(row);
-                        }
-                    }
-
-                    bookListFiltered = filteredList;
-                }
-                FilterResults filterResults = new FilterResults();
-                filterResults.values = bookListFiltered;
-                return filterResults;
-
-
-            }
-
-            @Override
-            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-
-                bookListFiltered = (ArrayList<BookPayload>) filterResults.values;
-                notifyDataSetChanged();
-            }
-        };
-    }
 
 
     public interface mClickListener {
-        public void mClick(View v, int position);
+        public void mClick(View v, int position, String bookFile);
     }
 
-    public RecommandedRecycleAdapter(Context context, List<BookPayload> bookList, mClickListener listener) {
+    public RecommandedRecycleAdapter(Context context, List<RecomendedBooksPayload> bookList, mClickListener listener) {
         this.booksList = bookList;
         this.context = context;
         this.mClickListener = listener;
@@ -104,14 +63,14 @@ public class RecommandedRecycleAdapter extends
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_recommanded_list, parent, false);
 
-        return new RecommandedRecycleAdapter.MyViewHolder(itemView);
+        return new MyViewHolder(itemView);
 
     }
 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
 
-        final BookPayload book = booksList.get(position);
+        final RecomendedBooksPayload book = booksList.get(position);
 
         holder.title.setText(book.getName());
         holder.rating.setText("2");
@@ -132,7 +91,7 @@ public class RecommandedRecycleAdapter extends
         holder.bookRowClick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mClickListener.mClick(view, position);
+                mClickListener.mClick(view, position,book.getBookFile());
             }
         });
 

@@ -26,6 +26,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 import com.kinfoitsolutions.ebooks.ui.adapters.SearchBookAdapter
+import com.kinfoitsolutions.ebooks.ui.adapters.Top50Adapter
 import com.kinfoitsolutions.ebooks.ui.responsemodel.AllSearchDataSuccess.AllSearchDataSuccess
 import com.kinfoitsolutions.ebooks.ui.responsemodel.SearchDataResponse.SearchDataSuccess
 
@@ -38,8 +39,15 @@ class HomeFragment : BaseFragment() {
     private lateinit var bAdapter: RecommandedRecycleAdapter
     private lateinit var searchAdapter: SearchBookAdapter
 
+    // top50 data
+    private lateinit var top50Adapter: Top50Adapter
 
-    override fun provideYourFragmentView(inflater: LayoutInflater, parent: ViewGroup?, savedInstanceState: Bundle?): View {
+
+    override fun provideYourFragmentView(
+        inflater: LayoutInflater,
+        parent: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
 
         // Inflate the layout for this fragment
         viewOfLayout = inflater.inflate(R.layout.fragment_home, parent, false)
@@ -61,19 +69,16 @@ class HomeFragment : BaseFragment() {
         viewOfLayout.top50_books_recyclerview.setItemAnimator(DefaultItemAnimator())
 
 
-        // bAdapter1 = RecommandedRecycleAdapter(context, recommandedModelClasses1, this)
-        //  viewOfLayout.top50_books_recyclerview.setAdapter(bAdapter1)
-
 
         viewOfLayout.viewAllRecommend.setOnClickListener {
 
-            Navigation.findNavController(homeFragContainer).navigate(R.id.action_homeFragment_to_viewAllFragment);
+            Navigation.findNavController(homeFragContainer).navigate(R.id.action_homeFragment_to_viewAllFragment)
 
         }
 
         viewOfLayout.viewAllToday.setOnClickListener {
 
-            Navigation.findNavController(homeFragContainer).navigate(R.id.action_homeFragment_to_viewAllFragment);
+            Navigation.findNavController(homeFragContainer).navigate(R.id.action_homeFragment_to_viewAllTop50Fragment)
 
         }
 
@@ -92,14 +97,26 @@ class HomeFragment : BaseFragment() {
 
             val stringHashMap = HashMap<String, String>()
             stringHashMap.put("token", Hawk.get(AppConstants.TOKEN))
-            stringHashMap.put("orderby", "0")
 
             restClient.get_books(stringHashMap).enqueue(object : Callback<GetAllBooksSuccess>,
-                RecommandedRecycleAdapter.mClickListener {
+                RecommandedRecycleAdapter.mClickListener, Top50Adapter.mTop50ClickListener {
+                override fun mTop50Click(c: View?, pos: Int, bookFile: String?) {
 
-                override fun mClick(v: View?, position: Int) {
+
+                    Hawk.put(AppConstants.PDF_FILE, bookFile)
+
                     Navigation.findNavController(homeFragContainer)
-                        .navigate(R.id.action_homeFragment_to_bookReadingFragment);
+                        .navigate(R.id.action_homeFragment_to_webViewFragment)
+
+                }
+
+                override fun mClick(v: View?, position: Int, bookFile: String?) {
+
+                    Hawk.put(AppConstants.PDF_FILE, bookFile)
+
+                    Navigation.findNavController(homeFragContainer)
+                        .navigate(R.id.action_homeFragment_to_webViewFragment)
+
 
                 }
 
@@ -110,14 +127,18 @@ class HomeFragment : BaseFragment() {
                         if (response.body()!!.code.equals("100")) {
 
 
-                            val allBooks = response.body()!!.books
-
-                            bAdapter = RecommandedRecycleAdapter(context, allBooks, this)
+                            //Recommended Data
+                            val allRecommededBooks = response.body()!!.recomended
+                            bAdapter = RecommandedRecycleAdapter(context, allRecommededBooks, this)
                             viewOfLayout.recommanded_recyclerview.setAdapter(bAdapter)
 
-
-
                             bAdapter.notifyDataSetChanged()
+
+                            //Top 50 Data
+                            val allTop50Books = response.body()!!.top50
+                            top50Adapter = Top50Adapter(allTop50Books, context, this)
+                            viewOfLayout.top50_books_recyclerview.setAdapter(top50Adapter)
+                            top50Adapter.notifyDataSetChanged()
 
 
                             Utils.showSnackBar(context, "Success", activity!!.main_container)
@@ -168,6 +189,7 @@ class HomeFragment : BaseFragment() {
         }
 
     }
+
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         menu.findItem(R.id.action_category).setVisible(false)
@@ -230,65 +252,70 @@ class HomeFragment : BaseFragment() {
             stringHashMap.put("type", "1")
 
 
-            restClient.searchAllData(stringHashMap).enqueue(object : Callback<AllSearchDataSuccess>, SearchBookAdapter.mSearchClickListener {
+            restClient.searchAllData(stringHashMap)
+                .enqueue(object : Callback<AllSearchDataSuccess>, SearchBookAdapter.mSearchClickListener {
 
-                override fun mSearchClick(v: View?, position: Int) {
-                    Navigation.findNavController(homeFragContainer).navigate(R.id.action_homeFragment_to_bookReadingFragment);
-                }
+                    override fun mSearchClick(v: View?, position: Int) {
+                        Navigation.findNavController(homeFragContainer)
+                            .navigate(R.id.action_homeFragment_to_webViewFragment);
+                    }
 
-                override fun onResponse(call: Call<AllSearchDataSuccess>, response: Response<AllSearchDataSuccess>) {
+                    override fun onResponse(
+                        call: Call<AllSearchDataSuccess>,
+                        response: Response<AllSearchDataSuccess>
+                    ) {
 
-                    if (response.isSuccessful) {
+                        if (response.isSuccessful) {
 
-                        if (response.body()!!.code.equals("100")) {
+                            if (response.body()!!.code.equals("100")) {
 
-                            val searchAllBooks = response.body()!!.data
+                                val searchAllBooks = response.body()!!.data
 
-                            searchAdapter = SearchBookAdapter(searchAllBooks, context, this)
-                            viewOfLayout.recommanded_recyclerview.setAdapter(searchAdapter)
+                                searchAdapter = SearchBookAdapter(searchAllBooks, context, this)
+                                viewOfLayout.recommanded_recyclerview.setAdapter(searchAdapter)
 
-                            searchAdapter.notifyDataSetChanged()
+                                searchAdapter.notifyDataSetChanged()
 
-                            Utils.showSnackBar(context, "Success", activity!!.main_container)
+                                Utils.showSnackBar(context, "Success", activity!!.main_container)
+                                myDialog.dismiss()
+
+                            } else {
+                                Utils.showSnackBar(context, response.body()!!.msg, activity!!.main_container)
+                                myDialog.dismiss()
+
+                            }
+
+
+                        } else if (response.code() == 401) {
+                            // Handle unauthorized
+                            Utils.showSnackBar(context, "Unauthorized", activity!!.main_container)
                             myDialog.dismiss()
+
+
+                        } else if (response.code() == 500) {
+                            // Handle unauthorized
+
+                            Utils.showSnackBar(context, "Server Error", activity!!.main_container)
+                            myDialog.dismiss()
+
 
                         } else {
-                            Utils.showSnackBar(context, response.body()!!.msg, activity!!.main_container)
+                            //response is failed
+                            Utils.showSnackBar(context, "Failed", activity!!.main_container)
                             myDialog.dismiss()
 
+
                         }
+                    }
 
 
-                    } else if (response.code() == 401) {
-                        // Handle unauthorized
-                        Utils.showSnackBar(context, "Unauthorized", activity!!.main_container)
+                    override fun onFailure(call: Call<AllSearchDataSuccess>, t: Throwable) {
+
+                        Utils.showSnackBar(context, t.toString(), activity!!.main_container)
                         myDialog.dismiss()
-
-
-                    } else if (response.code() == 500) {
-                        // Handle unauthorized
-
-                        Utils.showSnackBar(context, "Server Error", activity!!.main_container)
-                        myDialog.dismiss()
-
-
-                    } else {
-                        //response is failed
-                        Utils.showSnackBar(context, "Failed", activity!!.main_container)
-                        myDialog.dismiss()
-
 
                     }
-                }
-
-
-                override fun onFailure(call: Call<AllSearchDataSuccess>, t: Throwable) {
-
-                    Utils.showSnackBar(context, t.toString(), activity!!.main_container)
-                    myDialog.dismiss()
-
-                }
-            })
+                })
 
 
         } else {

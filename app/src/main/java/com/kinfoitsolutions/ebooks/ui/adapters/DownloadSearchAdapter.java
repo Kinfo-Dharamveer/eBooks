@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.drivingschool.android.customviews.CustomTextView;
 import com.kinfoitsolutions.ebooks.R;
 import com.kinfoitsolutions.ebooks.ui.responsemodel.AllSearchDataSuccess.AllSearchDataPayload;
-import com.kinfoitsolutions.ebooks.ui.responsemodel.GetAllBooksResponse.BookPayload;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

@@ -10,14 +10,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.drivingschool.android.customviews.CustomTextView;
 import com.kinfoitsolutions.ebooks.R;
-import com.kinfoitsolutions.ebooks.ui.responsemodel.GetAllBooksResponse.BookPayload;
+import com.kinfoitsolutions.ebooks.ui.responsemodel.GetAllBooksResponse.RecomendedBooksPayload;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHolder> {
 
-    private List<BookPayload> downloadModelClassList;
+    private List<RecomendedBooksPayload> downloadModelClassList;
     private Context context;
     private mDownloadListener mDownloadListener;
 
@@ -26,7 +26,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHo
     }
 
 
-    public DownloadAdapter(List<BookPayload> downloadModelClassList, Context context,mDownloadListener downloadListener) {
+    public DownloadAdapter(List<RecomendedBooksPayload> downloadModelClassList, Context context, mDownloadListener downloadListener) {
         this.downloadModelClassList = downloadModelClassList;
         this.context = context;
         this.mDownloadListener = downloadListener;
@@ -45,7 +45,7 @@ public class DownloadAdapter extends RecyclerView.Adapter<DownloadAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
 
-        final BookPayload lists = downloadModelClassList.get(position);
+        final RecomendedBooksPayload lists = downloadModelClassList.get(position);
 
         holder.title.setText(lists.getName());
         holder.author_name.setText(lists.getAuthorName());
